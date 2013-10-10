@@ -1,17 +1,15 @@
 set :application, 'KodeKonkurrenz'
 set :repo_url, 'git@github.com/d601/KodeKonkurrenz.git'
+set :branch, 'test'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
+# might need to delete this crap - i added it based on stuff other people wrote
 set :deploy_to, '/home/web/deployment/test/'
-set :user, "jesse"
 set :use_sudo, false
 set :deploy_via, :copy
 set :scm, :git
-
-ssh_options[:keys] = %w(/Users/victor.pudeyev/ec2/MBP-2.pem)
-
-server "54.215.239.187", :app, :web, :db, :primary => true
+# end delete crap
 
 # set :format, :pretty
 # set :log_level, :debug
@@ -43,5 +41,4 @@ namespace :deploy do
   end
 
   after :finishing, 'deploy:cleanup'
-
 end
