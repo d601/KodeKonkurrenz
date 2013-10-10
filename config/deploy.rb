@@ -1,5 +1,5 @@
 set :application, 'KodeKonkurrenz'
-set :repo_url, 'git@github.com/d601/KodeKonkurrenz.git'
+set :repo_url, 'https://github.com/d601/KodeKonkurrenz.git'
 set :branch, 'test'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
