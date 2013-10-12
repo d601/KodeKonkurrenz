@@ -5,7 +5,7 @@ set :branch, 'test'
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # might need to delete this crap - i added it based on stuff other people wrote
-set :deploy_to, '/home/web/deployment/test/'
+set :deploy_to, '/var/www/testing-jesse'
 set :use_sudo, false
 set :deploy_via, :copy
 set :scm, :git
@@ -27,7 +27,7 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
-      # execute :touch, release_path.join('tmp/restart.txt')
+      execute :touch, release_path.join('/tmp/restart.txt')
     end
   end
 
