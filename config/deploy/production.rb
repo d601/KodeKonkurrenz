@@ -1,4 +1,6 @@
 set :stage, :production
+set :branch, 'master'
+set :deploy_to, '/var/www/master'
 
 # Simple Role Syntax
 # ==================
@@ -28,7 +30,7 @@ set :stage, :production
 #  }
 # and/or per server
  server '54.215.239.187',
-   user: 'jesse',
+   user: 'web',
    roles: %w{web app db},
    ssh_options: {
      #user: 'user_name', # overrides user setting above

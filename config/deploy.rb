@@ -1,11 +1,9 @@
 set :application, 'KodeKonkurrenz'
 set :repo_url, 'https://github.com/d601/KodeKonkurrenz.git'
-set :branch, 'test'
 
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }
 
 # might need to delete this crap - i added it based on stuff other people wrote
-set :deploy_to, '/var/www/testing-jesse'
 set :use_sudo, false
 set :deploy_via, :copy
 set :scm, :git
@@ -28,6 +26,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       # Your restart mechanism here, for example:
       execute :touch, release_path.join('/tmp/restart.txt')
+      execute :chown, "-R", ":www-data", "#{deploy_to}"
     end
   end
 
