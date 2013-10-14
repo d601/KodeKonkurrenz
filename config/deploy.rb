@@ -27,7 +27,13 @@ namespace :deploy do
       # Your restart mechanism here, for example:
       execute :mkdir, release_path.join('tmp')
       execute :touch, release_path.join('tmp/restart.txt')
+      # Apache's user is www-data. Obviously it needs to be able to read the files it is serving.
       execute :chown, "-R", ":www-data", "#{deploy_to}"
+      # This fixes permissions according to
+      # 4.2. Deploying to a virtual host’s root
+      # of the Passenger manual. I have not actually determined if this helps. -js
+      execute :chmod, "-R", "g+rx", release_path.join('public')
+      execute :chmod, "g+rx", release_path
     end
   end
 
