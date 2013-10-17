@@ -47,4 +47,9 @@ namespace :deploy do
   end
 
   after :finishing, 'deploy:cleanup'
+    on roles(:web) do
+      execute :rm, "-f", "/tmp/git-ssh.sh"
+    end
+  end
+
 end
