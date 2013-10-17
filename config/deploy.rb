@@ -52,4 +52,12 @@ namespace :deploy do
     end
   end
 
+  after 'deploy:update_code', 'deploy:symlink_db'
+
+  task :symlink_db do
+    on roles(:app) do
+      run "ln -nfs #{deploy_to}/shared/database.yml #{release_path}/config/database.yml"
+    end
+  end
+
 end
