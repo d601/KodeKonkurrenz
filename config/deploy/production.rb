@@ -1,6 +1,6 @@
 set :stage, :production
 set :branch, 'master'
-set :deploy_to, '/var/www/master'
+set :deploy_to, '/var/www/KodeKonkurrenz'
 
 # Simple Role Syntax
 # ==================
@@ -30,11 +30,11 @@ set :deploy_to, '/var/www/master'
 #  }
 # and/or per server
  server '54.215.239.187',
-   user: 'web',
+   user: 'paul',
    roles: %w{web app db},
    ssh_options: {
      #user: 'user_name', # overrides user setting above
-     keys: %w(/home/js/.ssh/jesse-key-1.pem),
+     keys: %w(/Users/psladek/.ssh/Paul-key-1.pem),
      forward_agent: false,
      auth_methods: %w(publickey)
      # password: 'please use keys'
