@@ -17,3 +17,6 @@
 
 # Ignore database file.
 /config/database.yml
+
+# Ignore private SSH settings.
+/config/private-ssh-settings
