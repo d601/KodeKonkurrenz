@@ -56,7 +56,7 @@ namespace :deploy do
 
   task :symlink_db do
     on roles(:app) do
-      run "ln -nfs #{deploy_to}/shared/database.yml #{release_path}/config/database.yml"
+      run "ln -nfs #{release_path}/config/database.yml #{deploy_to}/shared/database.yml"
     end
   end
 
