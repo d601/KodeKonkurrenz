@@ -1,4 +1,4 @@
-require 'private-ssh-settings.rb'
+require 'config/deploy/private-ssh-settings.rb'
 set :stage, :staging
 set :branch, KodeKonkurrenz-private-ssh-settings::branch
 set :deploy_to, KodeKonkurrenz-private-ssh-settings::deploymentLocation
