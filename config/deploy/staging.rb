@@ -1,6 +1,7 @@
+require '../private-ssh-settings.rb'
 set :stage, :staging
-set :branch, 'test'
-set :deploy_to, '/var/www/testing-jesse'
+set :branch, KodeKonkurrenz-private-ssh-settings::branch
+set :deploy_to, KodeKonkurrenz-private-ssh-settings::deploymentLocation
 
 # Simple Role Syntax
 # ==================
@@ -30,11 +31,11 @@ set :deploy_to, '/var/www/testing-jesse'
 #  }
 # and/or per server
  server '54.215.239.187',
-   user: 'jesse',
+   user: KodeKonkurrenz-private-ssh-settings::user,
    roles: %w{web app db},
    ssh_options: {
      #user: 'user_name', # overrides user setting above
-     keys: %w(/home/js/.ssh/jesse-key-1.pem),
+     keys: KodeKonkurrenz-private-ssh-settings::keyfileLocation,
      forward_agent: false,
      auth_methods: %w(publickey)
      # password: 'please use keys'
