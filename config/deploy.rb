@@ -49,14 +49,7 @@ namespace :deploy do
   after :finishing, 'deploy:cleanup' do
     on roles(:web) do
       execute :rm, "-f", "/tmp/git-ssh.sh"
-    end
-  end
-
-  after :finishing, :symlink_db
-
-  task :symlink_db do
-    on roles(:app) do
-      run "ln -nfs #{release_path}/config/database.yml #{deploy_to}/shared/database.yml"
+      execute :ln, "-nfs", "#{release_path}/config/database.yml", "#{deploy_to}/shared/database.yml"
     end
   end
 
