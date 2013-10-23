@@ -19,4 +19,4 @@
 /config/database.yml
 
 # Ignore private SSH settings.
-/config/private-ssh-settings
+/config/private-ssh-settings.rb
