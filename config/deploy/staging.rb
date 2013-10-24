@@ -1,4 +1,4 @@
-require './config/deploy/private-ssh-settings.rb'
+require './config/private-ssh-settings.rb'
 set :stage, :staging
 set :branch, KkPrivateSSHSettings::BRANCH
 set :deploy_to, KkPrivateSSHSettings::DEPLOY_LOCATION
