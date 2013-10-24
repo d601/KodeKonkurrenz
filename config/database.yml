@@ -8,8 +8,8 @@ development:
   database: kodedb
   pool: 5
   timeout: 5000
-  username: root
-  password: rubyred
+  username: kode
+  password: PaJa2334x
   host: 127.0.0.1
 
 
@@ -21,8 +21,8 @@ test:
   database: kodedb
   pool: 5
   timeout: 5000
-  username: root
-  password: rubyred
+  username: kode
+  password: PaJa2334x
   host: 127.0.0.1
 
 production:
@@ -30,6 +30,6 @@ production:
   database: kodedb
   pool: 5
   timeout: 5000
-  username: root
-  password: rubyred
+  username: kode
+  password: PaJa2334x
   host: 127.0.0.1
