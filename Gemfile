@@ -46,7 +46,7 @@ end
 
 # Use Capistrano for deployment
 gem 'capistrano', '~> 3.0.0', group: :development
-gem 'capistrano-bundler'
+# gem 'capistrano-bundler'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
