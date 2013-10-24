@@ -20,3 +20,6 @@
 
 # Ignore private SSH settings.
 /config/deploy/private-ssh-settings.rb
+
+# Ignore vendor
+/vendor/bundle/
