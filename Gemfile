@@ -48,6 +48,8 @@ end
 gem 'capistrano', '~> 3.0.0', group: :development
 # gem 'capistrano-bundler'
 
+gem 'devise'
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 # gem 'rvm-capistrano', group: :development
