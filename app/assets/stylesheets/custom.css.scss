@@ -22,7 +22,7 @@ body {
 /* Set the fixed height of the footer here */
 #push,
 #footer {
-    height: 75px;
+    height: 280px;
 }
 
 #footer {
@@ -48,4 +48,18 @@ body {
         padding-left: 20px;
         padding-right: 20px;
     }
+}
+
+/* Page css starts here */
+
+.navbar-inverse .nav > li > a {
+    color: dodgerblue;
+}
+
+a {
+    color: dodgerblue;
+}
+
+.muted {
+    color: whitesmoke;
 }

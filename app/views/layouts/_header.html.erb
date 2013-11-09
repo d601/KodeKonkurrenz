@@ -2,11 +2,20 @@
   <div class="navbar-inner">
     <div class="container">
       <nav>
-        <ul class="nav pull-right">
-          <li><%= link_to "Home",    '#' %></li>
-          <li><%= link_to "Help",    '#' %></li>
-          <li><%= link_to "Sign in", '#' %></li>
+        <ul class="nav pull-left">
+          <li><a class="brand" href="#">KodeKonkurrenz</a></li>
+          <li><%= link_to "Play", '#' %></li>
+          <li><%= link_to "Practice", '#' %></li>
+          <li><%= link_to "Discuss", '#' %></li>
         </ul>
+        <form class="navbar-form pull-right">
+          <input type="text" class="span2" placeholder="kode@gmail.com">
+          <input type="text" class="span2" placeholder="Password">
+          <div class="btn-group">
+            <button type="submit" class="btn btn-inverse">Login</button>
+            <button type="submit" class="btn btn-inverse">Sign Up</button>
+          </div>
+        </form>
       </nav>
     </div>
   </div>
