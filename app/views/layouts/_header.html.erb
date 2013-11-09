@@ -12,8 +12,12 @@
           <input type="text" class="span2" placeholder="kode@gmail.com">
           <input type="text" class="span2" placeholder="Password">
           <div class="btn-group">
-            <button type="submit" class="btn btn-inverse">Login</button>
-            <button type="submit" class="btn btn-inverse">Sign Up</button>
+            <% if user_signed_in? %>
+              <%= link_to('Logout', destroy_user_session_path, :method => :delete, class: "btn btn-inverse") %>
+            <% else %>
+              <%= link_to('Login', new_user_session_path, class: "btn btn-inverse") %>
+              <%= link_to('Sign Up', new_user_registration_path, class: "btn btn-inverse") %>
+            <% end %>
           </div>
         </form>
       </nav>
