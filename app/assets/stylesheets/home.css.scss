@@ -1,3 +1,4 @@
+//Circles
 .ch-grid {
     margin: 20px 0 0 0;
     padding: 0;
@@ -31,29 +32,51 @@
     position: relative;
     cursor: default;
     box-shadow: 
-        inset 0 0 0 16px rgba(255,255,255,0.6),
+        inset 0 0 0 12px rgba(0,0,0,0.8),
         0 1px 2px rgba(0,0,0,0.1);
     transition: all 0.4s ease-in-out;
 }
 
+a:link {
+    color:#FFFFFF; /* unvisited link */
+}      
+a:visited {
+    color:#FFFFFF;  /* visited link */
+}
+a:hover {
+    color:#FFFFFF;  /* mouse over link */
+    text-decoration:none;
+    font-weight:bold;
+    font-size:120%;
+}
+a:active {
+    color:#FFFFFF;
+}
+
 .ch-img-1 { 
-    //background-image: url("/assets/play_icon.png");
-    background-size:220px;
+    background-image: url("/assets/play_icon_black.gif");
+    background-size:150px;
+    background-repeat:no-repeat;
+    background-position:60%;
 }
  
 .ch-img-2 { 
-    background-image: url("/assets/play_icon.png");
-    background-size:220px;
+    background-image: url("/assets/practice_icon.png");
+    background-size:130px;
+    background-repeat:no-repeat;
+    background-position:center;
 }
  
 .ch-img-3 { 
-    //background-image: url("/assets/play_icon.png");
-    background-size:220px;
+    background-image: url("/assets/discussion_icon.png");
+    background-size:130px;
+    background-repeat:no-repeat;
+    background-position:center;
 }
 
 .ch-info {
     position: absolute;
-    background: rgba(63,147,147, 0.8);
+    background: rgba(30,144,255, 0.8);
     width: inherit;
     height: inherit;
     border-radius: 50%;
@@ -67,10 +90,10 @@
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 2px;
-    font-size: 22px;
-    margin: 0 30px;
-    padding: 45px 0 0 0;
-    height: 140px;
+    font-size: 28px;
+    margin: 0 10px;
+    padding: 41% 0 0 0;
+    height: 130px;
     font-family: 'Open Sans', Arial, sans-serif;
     text-shadow: 
         0 0 1px #fff, 
@@ -117,4 +140,24 @@
 
 .ch-item:hover .ch-info p {
     opacity: 1;
+}
+
+//Text Sections
+h2 {
+    font-size: 28px;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 600;
+}
+
+.info {
+    text-align:center;
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 50px 120px 0px;
+}
+
+.play_links {
+    margin: 70px 0px 60px;   
 }
