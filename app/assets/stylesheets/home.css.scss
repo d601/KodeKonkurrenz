@@ -151,11 +151,31 @@ h1, h2, h3, h4 {
     font-weight: 600;
 }
 
-.info {
+.info-text {
     text-align:center;
     font-size: 18px;
     line-height: 1.5;
-    margin: 50px 120px 0px;
+    margin: auto 120px auto;
+}
+
+.white-section {
+    margin: 50px 0px 0px;
+}
+
+.grey-section .intro {
+    margin: auto 240px;       
+
+}
+
+.intro {
+    margin: 0px 120px;       
+}
+
+.grey-section {
+    margin:0px -120px;
+    padding: 50px 0px 80px 0px;
+    background-color: rgb(114,115,117);
+    color: rgb(220,220,220);
 }
 
 .play_links {
