@@ -3,14 +3,12 @@
     <div class="container">
       <nav>
         <ul class="nav pull-left">
-          <li><a class="brand" href="/home">KodeKonkurrenz</a></li>
-          <li><%= link_to "Play", '/liveGraph' %></li>
+          <%= link_to "KodeKonkurrenz", root_path, :class => 'brand' %>
+          <li><%= link_to "Play", liveGraph_path %></li>
           <li><%= link_to "Practice", '/practice' %></li>
-          <li><%= link_to "Discuss", '/discuss' %></li>
+          <li><%= link_to "Discuss", '/discuss' %></li>e
         </ul>
-        <form class="navbar-form pull-right">
-          <input type="text" class="span2" placeholder="kode@gmail.com">
-          <input type="text" class="span2" placeholder="Password">
+        <div class="navbar-form pull-right">
           <div class="btn-group">
             <% if user_signed_in? %>
               <%= link_to('Logout', destroy_user_session_path, :method => :delete, class: "btn btn-inverse") %>
@@ -19,7 +17,7 @@
               <%= link_to('Sign Up', new_user_registration_path, class: "btn btn-inverse") %>
             <% end %>
           </div>
-        </form>
+        </div>
       </nav>
     </div>
   </div>
