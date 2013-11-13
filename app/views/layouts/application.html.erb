@@ -15,10 +15,12 @@
       <!-- Begin page content -->
       <div id="layout_container" class="container">
         <%= render 'layouts/header' %>
-        
       </div>
+      <div>
       <%= yield %>
-      <div id="push"></div>
+      </div>
+      <div id="push">
+      </div>
     </div>
     <%= render 'layouts/footer' %>
   </body>
