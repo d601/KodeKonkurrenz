@@ -1,12 +1,29 @@
 KodeKonkurrenz::Application.routes.draw do
+
+  # This line mounts Forem's routes at /forums by default.
+  # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
+  # If you would like to change where this extension is mounted, simply change the :at option to something different.
+  #
+  # We ask that you don't use the :as option here, as Forem relies on it being the default of "forem"
+  mount Forem::Engine, :at => '/discuss'
+
   devise_for :users
   # get "pages/home"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
+  # 
   root to: "pages#home"
-  match '/liveGraph' , to: 'pages#liveGraph', via: 'get'
+  match '/liveGraph', to: 'pages#liveGraph', via: 'get'
+  match '/about' , to: 'pages#about', via: 'get'
+  match '/contactUs' , to: 'pages#contactUs', via: 'get'
+  match '/privacy' , to: 'pages#privacy', via: 'get'
+  match '/discuss' , to: 'pages#discuss', via: 'get'
+  match '/practice' , to: 'pages#practice', via: 'get'
+  match '/security' , to: 'pages#security', via: 'get'
+  match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
+
 
 
   # Example of regular route:

@@ -53,7 +53,7 @@ namespace :deploy do
 
   after :finishing, 'deploy:cleanup' do
     on roles(:web) do
-      execute :rm, "-f", "/tmp/git-ssh.sh"
+      execute :rm, "-f", "#{fetch(:tmp_dir)}/#{fetch(:application)}/git-ssh.sh"
       execute :ln, "-nfs", "/var/www/shared/database.yml", "#{release_path}/config/database.yml"
     end
   end
