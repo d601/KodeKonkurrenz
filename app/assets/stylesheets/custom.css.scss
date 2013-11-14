@@ -13,23 +13,19 @@ body {
     height: auto !important;
     height: 100%;
     /* Negative indent footer by it's height */
-    margin: 0 auto -75px;
+    margin: 0 auto -250px;
 
     #layout_container {
         margin-top: 40px
     }
 
     background-image: url("/assets/code_snippet2.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
+    background-repeat: repeat;
+    background-attachment: scroll;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
-    background-size: cover;
-
-    //background-repeat:repeat-x;
-    //background-size: auto 900px;
+    background-size: 100%;
 }
 
 /* Set the fixed height of the footer here */
