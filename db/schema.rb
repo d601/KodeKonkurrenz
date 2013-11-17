@@ -108,19 +108,6 @@ ActiveRecord::Schema.define(version: 20131114051259) do
   add_index "forem_views", ["user_id"], name: "index_forem_views_on_user_id", using: :btree
   add_index "forem_views", ["viewable_id"], name: "index_forem_views_on_viewable_id", using: :btree
 
-  create_table "high_scores", force: true do |t|
-    t.string   "game"
-    t.integer  "score"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "student", id: false, force: true do |t|
-    t.string "id",   limit: 2
-    t.string "name", limit: 20
-    t.string "rank", limit: 2
-  end
-
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",               null: false
     t.string   "encrypted_password",     default: "",               null: false

@@ -76,6 +76,14 @@ a{
    color: dodgerblue; 
 }
 
+a:hover{
+  color:#FFFFFF;  /* mouse over link */
+  text-decoration:none;
+  font-weight:bold;
+  font-size:100%;
+  
+}
+
 .muted {
     color: whitesmoke;
 }
@@ -126,7 +134,12 @@ a{
   -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
      -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
           box-shadow: 0 1px 2px rgba(0,0,0,.05);
+  a:hover{
+    color:black;
+  }
 }
+
+
 
 
 
