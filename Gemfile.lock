@@ -1,3 +1,31 @@
+GIT
+  remote: git://github.com/FriendlyId/friendly_id.git
+  revision: 0c2ff236ff0137d4130d64863b22babc488add2c
+  specs:
+    friendly_id (5.0.1)
+      activerecord (~> 4.0.0)
+
+GIT
+  remote: git://github.com/radar/forem-bootstrap.git
+  revision: ed6dca40937b5c73e0ab04c912d27313e945362b
+  specs:
+    forem-bootstrap (0.0.1)
+      bootstrap-sass (~> 2.3.2.1)
+
+GIT
+  remote: git://github.com/radar/forem.git
+  revision: 9d8ae4f88c30654baf991597fd109a6a2014eccc
+  branch: rails4
+  specs:
+    forem (1.0.0.beta1)
+      decorators (~> 1.0.2)
+      gemoji (= 1.1.2)
+      rails (~> 4.0.0)
+      sanitize (= 2.0.6)
+      select2-rails (~> 3.4.3)
+      simple_form (~> 3.0.0.rc)
+      workflow (= 0.8.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -28,9 +56,10 @@ GEM
     arel (4.0.1)
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
-    bootstrap-sass (2.3.2.0)
+    bootstrap-sass (2.3.2.1)
       sass (~> 3.2)
     builder (3.1.4)
+    cancan (1.6.7)
     capistrano (3.0.1)
       i18n
       rake (>= 10.0.0)
@@ -42,7 +71,9 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.6.3)
-    devise (3.2.0)
+    decorators (1.0.3)
+      railties (>= 3.0.19, != 3.2.9, != 3.2.8, != 3.2.7, != 3.2.6, != 3.2.5, != 3.2.4, != 3.2.3, != 3.2.2, != 3.2.10, != 3.2.1, != 3.2.0, != 3.1.9, != 3.1.8, != 3.1.7, != 3.1.6, != 3.1.5, != 3.1.4, != 3.1.3, != 3.1.2, != 3.1.1, != 3.1.0)
+    devise (3.2.1)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -50,6 +81,9 @@ GEM
       warden (~> 1.2.3)
     erubis (2.7.0)
     execjs (2.0.2)
+    gemoji (1.1.2)
+    highcharts-rails (3.0.7)
+      railties (>= 3.1)
     hike (1.2.3)
     i18n (0.6.5)
     jbuilder (1.5.2)
@@ -63,13 +97,16 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25)
+    mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
     mysql2 (0.3.14)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
-    orm_adapter (0.4.0)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
+    orm_adapter (0.5.0)
     polyglot (0.3.3)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -90,6 +127,8 @@ GEM
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    sanitize (2.0.6)
+      nokogiri (>= 1.4.4)
     sass (3.2.12)
     sass-rails (4.0.1)
       railties (>= 4.0.0, < 5.0)
@@ -98,6 +137,12 @@ GEM
     sdoc (0.3.20)
       json (>= 1.1.3)
       rdoc (~> 3.10)
+    select2-rails (3.4.9)
+      sass-rails
+      thor (~> 0.14)
+    simple_form (3.0.0)
+      actionpack (>= 4.0.0, < 4.1)
+      activemodel (>= 4.0.0, < 4.1)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -117,11 +162,11 @@ GEM
     thread_safe (0.1.3)
       atomic
     tilt (1.4.1)
-    tins (0.13.0)
+    tins (0.13.1)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbolinks (1.3.0)
+    turbolinks (1.3.1)
       coffee-rails
     tzinfo (0.3.38)
     uglifier (2.3.1)
@@ -129,15 +174,22 @@ GEM
       json (>= 1.8.0)
     warden (1.2.3)
       rack (>= 1.0)
+    will_paginate (3.0.4)
+    workflow (0.8.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  bootstrap-sass (= 2.3.2.0)
+  bootstrap-sass (= 2.3.2.1)
+  cancan (= 1.6.7)
   capistrano (~> 3.0.0)
   coffee-rails (~> 4.0.0)
   devise
+  forem!
+  forem-bootstrap!
+  friendly_id!
+  highcharts-rails (~> 3.0.0)
   jbuilder (~> 1.2)
   jquery-rails
   multi_json (= 1.8.2)
@@ -147,3 +199,4 @@ DEPENDENCIES
   sdoc
   turbolinks
   uglifier (>= 1.3.0)
+  will_paginate (= 3.0.4)

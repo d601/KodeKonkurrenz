@@ -3,18 +3,18 @@
     <div class="container">
       <nav>
         <ul class="nav pull-left">
-          <%= link_to "KodeKonkurrenz", root_path, :class => 'brand' %>
-          <li><%= link_to "Play", liveGraph_path %></li>
-          <li><%= link_to "Practice", '/practice' %></li>
-          <li><%= link_to "Discuss", '/discuss' %></li>e
+          <%= link_to "KodeKonkurrenz", main_app.root_path, :class => 'brand' %>
+          <li><%= link_to "Play", main_app.liveGraph_path %></li>
+          <li><%= link_to "Practice", main_app.practice_path %></li>
+          <li><%= link_to "Discuss", main_app.discuss_path %></li>
         </ul>
         <div class="navbar-form pull-right">
           <div class="btn-group">
             <% if user_signed_in? %>
-              <%= link_to('Logout', destroy_user_session_path, :method => :delete, class: "btn btn-inverse") %>
+              <%= link_to('Logout', main_app.destroy_user_session_path, :method => :delete, class: "btn btn-inverse") %>
             <% else %>
-              <%= link_to('Login', new_user_session_path, class: "btn btn-inverse") %>
-              <%= link_to('Sign Up', new_user_registration_path, class: "btn btn-inverse") %>
+              <%= link_to('Login', main_app.new_user_session_path, class: "btn btn-inverse") %>
+              <%= link_to('Sign Up', main_app.new_user_registration_path, class: "btn btn-inverse") %>
             <% end %>
           </div>
         </div>

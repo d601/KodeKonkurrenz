@@ -11,7 +11,7 @@ gem 'mysql2'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
-gem 'bootstrap-sass', '2.3.2.0'
+gem 'bootstrap-sass', '2.3.2.1'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -49,6 +49,18 @@ gem 'capistrano', '~> 3.0.0', group: :development
 # gem 'capistrano-bundler'
 
 gem 'devise'
+
+gem 'forem', :github => "radar/forem", :branch => "rails4"
+
+gem 'friendly_id', github: "FriendlyId/friendly_id"
+gem 'cancan', '1.6.7'
+
+gem 'will_paginate', '3.0.4'
+
+gem 'forem-bootstrap', :github => "radar/forem-bootstrap"
+
+gem "highcharts-rails", "~> 3.0.0"
+
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

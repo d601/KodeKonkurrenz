@@ -37,20 +37,15 @@
     transition: all 0.4s ease-in-out;
 }
 
-a:link {
-    color:#FFFFFF; /* unvisited link */
-}      
-a:visited {
-    color:#FFFFFF;  /* visited link */
+a.whitelink{
+    color:#FFFFFF;
 }
-a:hover {
+
+a.whitelink:hover{
     color:#FFFFFF;  /* mouse over link */
     text-decoration:none;
     font-weight:bold;
-    font-size:120%;
-}
-a:active {
-    color:#FFFFFF;
+    font-size:150%;
 }
 
 .snippet {
