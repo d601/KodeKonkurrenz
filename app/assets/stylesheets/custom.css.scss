@@ -13,13 +13,14 @@ body {
     height: auto !important;
     height: 100%;
     /* Negative indent footer by it's height */
-    margin: 0 auto -250px;
+    margin: 0 auto -200px;
 
     #layout_container {
         margin-top: 40px
     }
 
-    background-image: url("/assets/code_snippet2.jpg");
+    background-color: #f0f0f0;
+    //background-image: url("/assets/code_snippet2.jpg");
     background-repeat: repeat;
     background-attachment: scroll;
     background-size: 1600px auto;
@@ -30,7 +31,7 @@ body {
 /* Set the fixed height of the footer here */
 #push,
 #footer {
-    height: 250px;
+    height: 200px;
 }
 
 #footer {
@@ -49,7 +50,7 @@ body {
 }
 
 #footerRow{
-    padding-top: 35px
+    padding-top: 60px
 }
 
 /* Lastly, apply responsive CSS fixes as necessary */
@@ -132,9 +133,9 @@ a:hover{
 
 .forem-form-div {
   max-width: 1100px;
-  padding: 19px 29px 29px;
+  padding: 19px 29px 12px;
   margin: 60px auto 20px;
-  background-color: #fff;
+  background-color: #727375;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
@@ -152,7 +153,7 @@ a:hover{
   max-width: 696px;
   padding: 19px 0px 10px;
   margin: 60px auto 20px;
-  background-color: #fff;
+  background-color: #727375;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;

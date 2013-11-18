@@ -1,7 +1,9 @@
 <div class="forem-form-div">
+<div class="well">
 <%= render :partial => 'forem/forums/head', :locals => { :forum => @topic.forum } %>
 
 <h2><%= t("forem.topic.new") %></h2>
 
 <%= render "form" %>
+</div>
 </div>

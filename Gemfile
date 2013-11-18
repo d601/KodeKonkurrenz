@@ -61,6 +61,12 @@ gem 'forem-bootstrap', :github => "radar/forem-bootstrap"
 
 gem "highcharts-rails", "~> 3.0.0"
 
+# twitter bootstrap css & javascript toolkit
+gem 'twitter-bootswatch-rails', '~> 3.0.1'
+
+# twitter bootstrap helpers gem, e.g., alerts etc...
+gem 'twitter-bootswatch-rails-helpers'
+
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

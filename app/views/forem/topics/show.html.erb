@@ -1,4 +1,5 @@
 <div class="forem-form-div">
+<div class="well">
 <div id='topic' class='<%= 'un' unless @topic.locked? %>locked'>
   <%= render :partial => 'forem/topics/head', :locals => { :topic => @topic } %>
 
@@ -46,5 +47,6 @@
   </div>
 
   <%= forem_pages_widget(@posts) %>
+</div>
 </div>
 </div>
