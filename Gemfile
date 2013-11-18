@@ -59,6 +59,9 @@ gem 'will_paginate', '3.0.4'
 
 gem 'forem-bootstrap', :github => "radar/forem-bootstrap"
 
+gem "highcharts-rails", "~> 3.0.0"
+
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 # gem 'rvm-capistrano', group: :development

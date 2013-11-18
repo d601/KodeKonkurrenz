@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: c80586ec6e5f76e88fea5be84d49a2d0e00c919f
+  revision: 0c2ff236ff0137d4130d64863b22babc488add2c
   specs:
     friendly_id (5.0.1)
       activerecord (~> 4.0.0)
@@ -82,6 +82,8 @@ GEM
     erubis (2.7.0)
     execjs (2.0.2)
     gemoji (1.1.2)
+    highcharts-rails (3.0.7)
+      railties (>= 3.1)
     hike (1.2.3)
     i18n (0.6.5)
     jbuilder (1.5.2)
@@ -187,6 +189,7 @@ DEPENDENCIES
   forem!
   forem-bootstrap!
   friendly_id!
+  highcharts-rails (~> 3.0.0)
   jbuilder (~> 1.2)
   jquery-rails
   multi_json (= 1.8.2)
