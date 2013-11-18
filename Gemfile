@@ -71,3 +71,5 @@ gem 'twitter-bootswatch-rails-helpers'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 # gem 'rvm-capistrano', group: :development
+
+gem 'ace-rails-ap'
