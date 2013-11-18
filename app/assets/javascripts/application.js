@@ -17,4 +17,5 @@
 //= require highcharts
 //= require highcharts-more
 //= require holder
+//= require ace/ace
 //= require_tree .

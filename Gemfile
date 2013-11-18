@@ -65,3 +65,5 @@ gem "highcharts-rails", "~> 3.0.0"
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 # gem 'rvm-capistrano', group: :development
+
+gem 'ace-rails-ap'
