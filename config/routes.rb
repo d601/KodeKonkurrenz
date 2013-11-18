@@ -7,6 +7,7 @@ KodeKonkurrenz::Application.routes.draw do
   # You can have the root of your site routed with "root"
   root to: "pages#home"
   match '/liveGraph' , to: 'pages#liveGraph', via: 'get'
+  match 'competition', to: 'pages#competition', via: 'get'
 
 
   # Example of regular route:

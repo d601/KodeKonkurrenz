@@ -13,19 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20131109192302) do
 
-  create_table "high_scores", force: true do |t|
-    t.string   "game"
-    t.integer  "score"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "student", id: false, force: true do |t|
-    t.string "id",   limit: 2
-    t.string "name", limit: 20
-    t.string "rank", limit: 2
-  end
-
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
