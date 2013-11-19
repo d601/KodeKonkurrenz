@@ -1,6 +1,7 @@
 <div class="border-form-div">
+<div id="forgotpassword" class="well">
 
-<h3>Forgot your password?</h3>
+<h3 class="forgotpassword">Forgot your password?</h3>
 
 <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
   <%= devise_error_messages! %>
@@ -12,4 +13,5 @@
 
 <%= render "devise/shared/links" %>
 
+</div>
 </div>
