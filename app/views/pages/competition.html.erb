@@ -1,9 +1,5 @@
-<div class="container-fluid" style="margin:0 20px 0 20px;">
-	<div class="row-fluid">
-		<div class="span2 offset5" style="background-color:#FFF">
-			<span class="text-center"><h6 id="clock">clock</h6></span>
-		</div>
-	</div>
+<div class="liveGraph-div" style="margin:15px 5px 5px 5px;">
+<div class="container-fluid" style="margin:0 20px 20px 20px;">
 	<div class="row-fluid span12" style="margin:0;padding:0">
 		<div class="span8" style="min-width=240px">
 			<div id="editor">
@@ -11,12 +7,24 @@ function foo(items) {
     var x = "All this is syntax highlighted";
     return x;
 }
+</div>
+		</div>
+		<div class="container span4" id="sideBar">
+			<div class="well well-small text-center" id="timer">
+				timer
+			</div>
+			<div class="well well-small" id="challengeDescription" style="overflow-y:scroll;margin-bottom:0">
+				<ul class="nav nav-tabs">
+					<li class="active"><a>Description</a></li>
+					<li><a>Class List</a></li>
+				</ul>
+				<div id="sideBarContent">
+					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</div>
 			</div>
 		</div>
-		<div class="span4 well well-small" id="challengeDescription" style="overflow-y:scroll;margin-bottom:0">
-			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		</div>
 	</div>
+</div>
 </div>
 <script>
     var editor = ace.edit("editor");
@@ -24,11 +32,11 @@ function foo(items) {
     editor.getSession().setMode("ace/mode/java");
     function resizeAce() {
       var offset=115;
-      $('#challengeDescription').height($(window).height()-offset-20);
+      $('#challengeDescription').height($(window).height()-offset-80);
       $('#editor').height($(window).height()-offset);
     };
     $(window).resize(resizeAce);
     resizeAce();
     $('#editor').width('55.5555555556%');
-    $('#challengeDescription').height($(window).height()-115);
+    $('#challengeDescription').height($(window).height()-195);
 </script>
