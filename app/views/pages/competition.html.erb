@@ -1,0 +1,50 @@
+<div class="competition-div">
+    <div class="container">
+       <div id="comprow"class="row span12" >
+          <div class="span8" >
+             <div id="editor">
+                function foo(items) {
+                var x = "All this is syntax highlighted";
+                return x;
+            }
+        </div>
+    </div>
+    <div class="container span4" id="sideBar">
+     <div class="well well-small text-center" id="timer">
+        timer
+    </div>
+    
+    <div class="tabbable"> 
+        <div class="well well-small">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">Problem Description</a></li>
+            <li><a href="#tab2" data-toggle="tab">Class List</a></li>
+        </ul>
+        </div>
+        <div class="well well-small" id="challengeDescription" >
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+          <div class="tab-pane" id="tab2">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+      </div>
+  </div>
+</div>
+<br>
+<div class="btn-group compbuttongroup">
+    <button type="button" class="btn btn-large">Check</button>
+    <button type="button" class="btn btn-large btn-primary">Submit</button>
+    <button type="button" class="btn btn-large">Upload</button>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/clouds");
+    editor.getSession().setMode("ace/mode/java");
+</script>

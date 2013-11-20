@@ -30,6 +30,7 @@ KodeKonkurrenz::Application.routes.draw do
   match '/practice' , to: 'pages#practice', via: 'get'
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
+  match '/competition', to: 'pages#competition', via: 'get'
 
 
 

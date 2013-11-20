@@ -1,4 +1,86 @@
-<h1>LiveGraph</h1>
+
+<div class="liveGraph-div">
+
+    <div class="container">
+        <div class="row-fluid">
+          <div class="span2">
+              <div class="well">
+
+                  <select >
+                      <option>5 Min</option>
+                      <option>10 Min</option>
+                      <option>20 Min</option>
+                      <option>30 Min</option>
+                      <option>40 Min</option>
+                      <option>50 Min</option>
+                      <option>60 Min</option>
+                  </select>
+
+                 <input type="text" placeholder="Min Rating">
+                 <input type="text" placeholder="Max Rating">
+
+                  <select>
+                      <option>Rated</option>
+                      <option>Unrated</option>
+                  </select>
+
+                 <button class="btn btn-primary" type="submit">Start Game</button>
+
+              </div>
+          </div>
+          <div class="span10">
+            <div class="well">
+
+            <div id="container" style="width:100%; height:400px;"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+    $(function () { 
+    $('#container').highcharts({
+        chart: {
+            type: 'scatter',
+            zoomType: 'xy'
+        },
+        title: {
+            text: null
+        },
+        ledgend:{
+            enabled: false
+        },
+        xAxis: {
+            alternateGridColor: '#E6F0FF',
+            allowDecimals: false,
+            tickInterval:10,
+            tickmarkPlacement: 'on',
+            gridLineWidth: 1,
+            min: 5,
+            max: 60
+        },
+        yAxis: {
+            title: {
+                text: null
+            },
+            allowDecimals: false,
+            tickInterval:1000,
+            min:0,
+            max:4000
+        },
+        series: [{
+            showInLegend: false,
+            data: { num: 1}
+        }],
+        credits: {
+            enabled: false
+        }
+    });
+});
+</script>
 
 
 
