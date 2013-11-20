@@ -10,7 +10,7 @@
         </ul>
         <div class="navbar-form pull-right">
           <div class="btn-group">
-            <% if admin_signed_in? or user_signed_in? %>
+            <% if user_signed_in? %>
               <%= link_to('Logout', main_app.destroy_user_session_path, :method => :delete, class: "btn btn-inverse") %>
             <% else %>
               <%= link_to('Login', main_app.new_user_session_path, class: "btn btn-inverse") %>
