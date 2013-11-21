@@ -1,7 +1,6 @@
 KodeKonkurrenz::Application.routes.draw do
 
 
-  resources :problems
 
   # This line mounts Forem's routes at /forums by default.
   # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
@@ -44,6 +43,7 @@ KodeKonkurrenz::Application.routes.draw do
   scope '/admin' do
   #  match '/', to: 'pages#admin', via: 'get'
     resources :games
+    resources :problems
   end
 
   # Example of regular route:
