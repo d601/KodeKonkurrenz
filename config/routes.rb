@@ -32,7 +32,14 @@ KodeKonkurrenz::Application.routes.draw do
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
   match '/competition', to: 'pages#competition', via: 'get'
 
+  match '/admin', to: 'pages#admin', via: 'get'
 
+  # This is how it _should_ be done, I believe, so that you can add resources
+  # to the /admin path. Unfortunately, I couldn't get this to work with link_to
+  # - js
+  #scope '/admin' do
+  #  match '/', to: 'pages#admin', via: 'get'
+  #end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
