@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  time_limit: 9.99
+  player1_id: 1
+  player2_id: 1
+  problem_id: 1
+  winner_id: 1
+
+two:
+  time_limit: 9.99
+  player1_id: 1
+  player2_id: 1
+  problem_id: 1
+  winner_id: 1
