@@ -11,7 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131120050135) do
+ActiveRecord::Schema.define(version: 20131121181859) do
+
+  create_table "admins", force: true do |t|
+    t.string   "email",               default: "", null: false
+    t.string   "encrypted_password",  default: "", null: false
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",       default: 0,  null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
 
   create_table "forem_categories", force: true do |t|
     t.string   "name",       null: false
@@ -107,6 +122,16 @@ ActiveRecord::Schema.define(version: 20131120050135) do
   add_index "forem_views", ["updated_at"], name: "index_forem_views_on_updated_at", using: :btree
   add_index "forem_views", ["user_id"], name: "index_forem_views_on_user_id", using: :btree
   add_index "forem_views", ["viewable_id"], name: "index_forem_views_on_viewable_id", using: :btree
+
+  create_table "games", force: true do |t|
+    t.decimal  "time_limit", precision: 10, scale: 0
+    t.integer  "player1_id"
+    t.integer  "player2_id"
+    t.integer  "problem_id"
+    t.integer  "winner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "",               null: false
