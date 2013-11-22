@@ -1,4 +1,5 @@
 class ProblemsController < ApplicationController
+  before_action :load_problem, only: :create
   load_and_authorize_resource
   before_action :set_problem, only: [:show, :edit, :update, :destroy]
 
@@ -63,6 +64,12 @@ class ProblemsController < ApplicationController
   end
 
   private
+    # See https://github.com/ryanb/cancan/issues/835#issuecomment-21321676
+    # In short this is a workaround for a CanCan issue.
+    def load_problem
+      @problem = Problem.new(problem_params)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_problem
       @problem = Problem.find(params[:id])

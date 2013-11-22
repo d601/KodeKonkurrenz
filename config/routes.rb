@@ -1,7 +1,4 @@
 KodeKonkurrenz::Application.routes.draw do
-
-
-
   # This line mounts Forem's routes at /forums by default.
   # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
   # If you would like to change where this extension is mounted, simply change the :at option to something different.
@@ -36,14 +33,18 @@ KodeKonkurrenz::Application.routes.draw do
 
   match '/admin', to: 'pages#admin', via: 'get'
 
+  scope '/games' do
+    match '/open', to: 'games#open_games', via: 'get'
+  end
+
   # This is how it _should_ be done, I believe, so that you can add resources
   # to the /admin path. Unfortunately, I couldn't get this to work with link_to
   # - js
 
   scope '/admin' do
   #  match '/', to: 'pages#admin', via: 'get'
-    resources :games
     resources :problems
+    resources :games
   end
 
   # Example of regular route:

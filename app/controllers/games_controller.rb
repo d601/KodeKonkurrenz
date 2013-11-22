@@ -1,5 +1,6 @@
 class GamesController < ApplicationController
   load_and_authorize_resource
+  skip_load_and_authorize_resource only: [:open_games]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
 
   # GET /games
@@ -60,6 +61,11 @@ class GamesController < ApplicationController
       format.html { redirect_to games_url }
       format.json { head :no_content }
     end
+  end
+
+  # Public actions - accessible by non-admins
+  def open_games
+    render json: Game.all
   end
 
   private
