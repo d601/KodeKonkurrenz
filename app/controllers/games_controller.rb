@@ -1,4 +1,5 @@
 class GamesController < ApplicationController
+  before_action :load_game, only: :create
   load_and_authorize_resource
   skip_load_and_authorize_resource only: [:open_games]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
@@ -65,10 +66,14 @@ class GamesController < ApplicationController
 
   # Public actions - accessible by non-admins
   def open_games
-    render json: Game.all
+    render json: Game.where(winner_id: -1)
   end
 
   private
+    def load_game
+      @game = Game.new(game_params)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_game
       @game = Game.find(params[:id])
