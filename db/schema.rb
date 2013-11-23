@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131123211544) do
+ActiveRecord::Schema.define(version: 20131123220925) do
 
   create_table "admins", force: true do |t|
     t.string   "email",               default: "", null: false
@@ -159,6 +159,7 @@ ActiveRecord::Schema.define(version: 20131123211544) do
     t.string   "forem_state",            default: "pending_review"
     t.boolean  "forem_auto_subscribe",   default: false
     t.boolean  "admin",                  default: false
+    t.integer  "rating",                 default: 1450
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
