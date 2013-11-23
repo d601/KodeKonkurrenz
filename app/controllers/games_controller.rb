@@ -66,7 +66,8 @@ class GamesController < ApplicationController
 
   # Public actions - accessible by non-admins
   def open_games
-    render json: Game.where(winner_id: -1)
+    @game = Game.where(winner_id: -1).where(player2_id: -1)
+    render json: @game
   end
 
   private
