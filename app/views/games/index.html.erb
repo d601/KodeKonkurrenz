@@ -1,0 +1,35 @@
+<h1>Listing games</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Time limit</th>
+      <th>Player1</th>
+      <th>Player2</th>
+      <th>Problem</th>
+      <th>Winner</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @games.each do |game| %>
+      <tr>
+        <td><%= game.time_limit %></td>
+        <td><%= game.player1_id %></td>
+        <td><%= game.player2_id %></td>
+        <td><%= game.problem_id %></td>
+        <td><%= game.winner_id %></td>
+        <td><%= link_to 'Show', game %></td>
+        <td><%= link_to 'Edit', edit_game_path(game) %></td>
+        <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Game', new_game_path %>

@@ -7,6 +7,9 @@
           <li><%= link_to "Play", main_app.liveGraph_path %></li>
           <li><%= link_to "Practice", main_app.practice_path %></li>
           <li><%= link_to "Discuss", main_app.discuss_path %></li>
+          <% if user_signed_in? and current_user.admin? %>
+            <li><%= link_to "Administrate", main_app.admin_path %></li>
+          <% end %>
         </ul>
         <div class="navbar-form pull-right">
           <div class="btn-group">

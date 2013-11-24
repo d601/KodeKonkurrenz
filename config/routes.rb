@@ -1,5 +1,4 @@
 KodeKonkurrenz::Application.routes.draw do
-
   # This line mounts Forem's routes at /forums by default.
   # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
   # If you would like to change where this extension is mounted, simply change the :at option to something different.
@@ -31,8 +30,15 @@ KodeKonkurrenz::Application.routes.draw do
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
   match '/competition', to: 'pages#competition', via: 'get'
+  match '/admin', to: 'pages#admin', via: 'get'
 
+  scope '/games' do
+    match '/open', to: 'games#open_games', via: 'get'
+  end
 
+  scope '/admin' do
+    resources :problems, :games
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
