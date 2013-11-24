@@ -1,6 +1,7 @@
 class ProblemsController < ApplicationController
   before_action :load_problem, only: :create
   load_and_authorize_resource
+  skip_load_and_authorize_resource only: [:practice]
   before_action :set_problem, only: [:show, :edit, :update, :destroy]
 
   # GET /problems
@@ -63,6 +64,11 @@ class ProblemsController < ApplicationController
     end
   end
 
+  def practice
+      @problems = Problem.all
+  end
+
+
   private
     # See https://github.com/ryanb/cancan/issues/835#issuecomment-21321676
     # In short this is a workaround for a CanCan issue.
@@ -79,4 +85,6 @@ class ProblemsController < ApplicationController
     def problem_params
       params.require(:problem).permit(:time, :difficulty, :category)
     end
+
+
 end

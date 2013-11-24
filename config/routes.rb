@@ -26,7 +26,7 @@ KodeKonkurrenz::Application.routes.draw do
   match '/contactUs' , to: 'pages#contactUs', via: 'get'
   match '/privacy' , to: 'pages#privacy', via: 'get'
   match '/discuss' , to: 'pages#discuss', via: 'get'
-  match '/practice' , to: 'pages#practice', via: 'get'
+  match '/practice' , to: 'problems#practice', via: 'get'
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
   match '/competition', to: 'pages#competition', via: 'get'

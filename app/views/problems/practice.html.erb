@@ -1,0 +1,59 @@
+<div class="liveGraph-div">
+    <div class="container">
+        <div class="row-fluid">
+        	<div class="span12">
+	            <div class="well">
+	            	<table id="problems" class="table table-striped">
+					  	<thead>
+						    <tr>
+							    <th>Time</th>
+							    <th>Difficulty</th>
+							    <th>Category</th>
+							   
+						    </tr>
+					  	</thead>
+
+					  	<tbody>
+					    	<% @problems.each do |problem| %>
+					        	<tr id="linkToProblem">
+							        <td><%= problem.time %></td>
+							        <td><%= problem.difficulty %></td>
+							        <td><%= problem.category %></td>
+							        
+						        </tr>
+						    <% end %>
+						    <tr id="linkToProblem">
+						    	<td style="display:none"><a href="www.google.com"></a></td>
+					        	<td>30 min</td>
+						        <td>Beginner</td>
+						        <td>Loops</td>
+						        
+					        </tr>
+					        <tr id="linkToProblem">
+					        	<td>a</td>
+						        <td>b</td>
+						        <td>c</td>
+						        
+					        </tr>
+					        <tr id="linkToProblem">
+					        	<td>a</td>
+						        <td>b</td>
+						        <td>c</td>
+						       
+					        </tr>
+						</tbody>	
+					</table>
+	            </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	$("#linkToProblem").click(function() {
+		alert($(this).find("a").attr("href"));
+		windows.location.href= $(this).find("a").attr("href");
+	});
+</script>
+		
