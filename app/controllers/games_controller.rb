@@ -72,6 +72,22 @@ class GamesController < ApplicationController
     render json: @games.as_json(:methods => [:rating])
   end
 
+  def join
+    @game = Game.find(params[:id])
+    if @game.player2_id != -1
+      # TODO: render an actual JSON error
+      render text: "Game is full!"
+      return
+    end
+
+    @game.player2_id = current_user.id
+    if @game.save
+      redirect_to main_app.competition_path
+    else
+      render text: "Failed to join game"
+    end
+  end
+
   private
     def load_game
       @game = Game.new(game_params)
