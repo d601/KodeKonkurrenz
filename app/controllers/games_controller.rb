@@ -75,16 +75,15 @@ class GamesController < ApplicationController
   def join
     @game = Game.find(params[:id])
     if @game.player2_id != -1
-      # TODO: render an actual JSON error
-      render text: "Game is full!"
+      render json: { { errors: "Game is full" }, status: 422 }
       return
     end
 
     @game.player2_id = current_user.id
     if @game.save
-      redirect_to main_app.competition_path
+      render json: { head: ok }
     else
-      render text: "Failed to join game"
+      render json: { { errors: "Failed to join game" }, status: 422 }
     end
   end
 
