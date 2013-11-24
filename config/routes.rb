@@ -36,6 +36,10 @@ KodeKonkurrenz::Application.routes.draw do
     match '/open', to: 'games#open_games', via: 'get'
   end
 
+  scope '/games' do
+    match '/run', to: 'games#run_game', via: 'post'
+  end
+
   scope '/admin' do
     resources :problems, :games
   end

@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:open_games]
+  skip_load_and_authorize_resource only: [:open_games,:run_game]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
 
   # GET /games
@@ -70,6 +70,25 @@ class GamesController < ApplicationController
     # render json will include only table attributes without asking for
     # additional details
     render json: @games.as_json(:methods => [:rating])
+  end
+
+  # POST /games/run/
+  def run_game
+    directory=params[:session]
+    java=params[:data]
+    dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
+    FileUtils.mkdir_p(dir) unless File.directory?(dir)
+    File.open(File.join(dir, 'main.java'), 'w') do |f|
+      f.puts java
+    end
+    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    compile = %x(javac main.java 2>&1)
+    if compile!=""
+      return render text: compile
+    else
+      output = %x(java main 2>&1)
+      return render text: output
+    end
   end
 
   private
