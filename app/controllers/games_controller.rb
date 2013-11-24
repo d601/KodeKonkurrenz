@@ -75,7 +75,7 @@ class GamesController < ApplicationController
   def join
     @game = Game.find(params[:id])
     if @game.player2_id != -1
-      render json: { { errors: "Game is full" }, status: 422 }
+      render json: { errors: "Game is full" }, status: 422
       return
     end
 
@@ -83,7 +83,7 @@ class GamesController < ApplicationController
     if @game.save
       render json: { head: ok }
     else
-      render json: { { errors: "Failed to join game" }, status: 422 }
+      render json: { errors: "Failed to join game" }, status: 422
     end
   end
 
