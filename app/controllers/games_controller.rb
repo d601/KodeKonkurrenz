@@ -69,7 +69,7 @@ class GamesController < ApplicationController
     @games = Game.where(winner_id: -1).where(player2_id: -1)
     # render json will include only table attributes without asking for
     # additional details
-    render json: @games.as_json(:methods => [:rating])
+    render json: @games.as_json(only: [:time_limit, :rating], methods: [:rating])
   end
 
   def join
