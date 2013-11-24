@@ -66,8 +66,10 @@ class GamesController < ApplicationController
 
   # Public actions - accessible by non-admins
   def open_games
-    @game = Game.where(winner_id: -1).where(player2_id: -1)
-    render json: @game
+    @games = Game.where(winner_id: -1).where(player2_id: -1)
+    # render json will include only table attributes without asking for
+    # additional details
+    render json: @games.as_json(:methods => [:rating])
   end
 
   private
