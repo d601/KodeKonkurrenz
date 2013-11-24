@@ -69,7 +69,22 @@ class GamesController < ApplicationController
     @games = Game.where(winner_id: -1).where(player2_id: -1)
     # render json will include only table attributes without asking for
     # additional details
-    render json: @games.as_json(:methods => [:rating])
+    render json: @games.as_json(only: [:id, :time_limit, :rating], methods: [:rating])
+  end
+
+  def join
+    @game = Game.find(params[:id])
+    if @game.player2_id != -1
+      render json: { errors: "Game is full" }, status: 422
+      return
+    end
+
+    @game.player2_id = current_user.id
+    if @game.save
+      render json: { head: ok }
+    else
+      render json: { errors: "Failed to join game" }, status: 422
+    end
   end
 
   # POST /games/run/

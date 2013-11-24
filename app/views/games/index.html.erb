@@ -11,6 +11,7 @@
       <th></th>
       <th></th>
       <th></th>
+      <th></th>
     </tr>
   </thead>
 
@@ -25,6 +26,12 @@
         <td><%= link_to 'Show', game %></td>
         <td><%= link_to 'Edit', edit_game_path(game) %></td>
         <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%= form_tag({controller: "games", action: "join"}, method: "post") do  %>
+            <%= hidden_field_tag(:id, game.id) %>
+            <%= submit_tag("Join") %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
