@@ -1,10 +1,10 @@
 <div class="competition-div" id="competition-div">
-	<div id="editor" style="position:relative;top:15px;left:15px">class main{
+	<div id="editor">class main{
 	public static void main(String args[]){
 		System.out.println("it works");
 	}
 }</div>
-	<div id="sideBar" style="position:absolute;top:71px;right:30px;">
+	<div id="sideBar">
 		<div class="well well-small text-center" id="timer">
        			timer
 		</div>
@@ -51,9 +51,6 @@
 		checkOrSubmit(true,function(){
 			alert('submit');
 		})
-	});
-	$('#uploadBtn').click(function(){
-		alert('upload');
 	});
 	function checkOrSubmit(submitBool,customFunc){
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
