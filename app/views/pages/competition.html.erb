@@ -1,35 +1,22 @@
-<div class="competition-div row">
-	<div class="span8">
-		<div id="editor">class main{
+<div class="competition-div" id="competition-div">
+	<div id="editor" style="position:relative;top:15px;left:15px">class main{
 	public static void main(String args[]){
 		System.out.println("it works");
 	}
 }</div>
-	</div>
-	<div class="span4" id="sideBar">
+	<div id="sideBar" style="position:absolute;top:71px;right:30px;">
 		<div class="well well-small text-center" id="timer">
        			timer
 		</div>
-		<div class="tabbable well well-small"> 
-			<ul class="nav nav-tabs" id="descTabs">
-				<li class="active"><a href="#tab1" data-toggle="tab">Problem Description</a></li>
-				<li><a href="#tab2" data-toggle="tab">Class List</a></li>
-			</ul>
+		<div class="tabbable well well-small">
+			Description: 
 			<div class="well well-small" id="challengeDescription" >
-				<div class="tab-content">
-					<div class="tab-pane active" id="tab1">
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					</div>
-					<div class="tab-pane" id="tab2">
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-					</div>
-				</div>
 			</div>
 		</div>
-		<div class="btn-group compbuttongroup">
+		<div class="btn-group text-center" id="submissionBtns">
 			<button type="button" class="btn btn-large" id="checkBtn">Check</button>
-			<button type="button" class="btn btn-large btn-primary" id="submitBtn">Submit</button>
-			<button type="button" class="btn btn-large" id="uploadBtn">Upload</button>
+			<button type="button" class="btn btn-large" id="submitBtn">Submit</button>
 		</div>
 	</div>
 </div>
@@ -43,10 +30,16 @@
 	editor.setTheme("ace/theme/clouds");
 	editor.getSession().setMode("ace/mode/java");
 	function resizeAce() {
-		var offset=150;
-		$('#challengeDescription').height($(window).height()-offset-200);
-		$('#editor').height($(window).height()-offset);
-	 };
+		var height=$(window).height();
+		var width=$(window).width();
+		$('#competition-div').height(height-90);
+		$('#competition-div').width(width-30);
+		$('#editor').width(1.618/2.618*width-13);
+		$('#editor').height(height-120);
+		$('#challengeDescription').height($(window).height()-300);
+		$('#sideBar').width(width/2.618-63);
+		$('#submissionBtns').width(width/2.618-63);
+	};
 	$(window).resize(resizeAce);
 	resizeAce();
 	$('#checkBtn').click(function(){

@@ -1,5 +1,4 @@
 #editor{
-    width: 55.5556%;
     min-width: 200px;
     min-height: 200px;
 }
@@ -10,8 +9,6 @@
 }
 
 .competition-div {
-  max-width: 1000px;
-  padding: 30px 30px 30px 20px;
   margin: 15px;
   background-color: #727375;
   border: 1px solid #e5e5e5;
@@ -26,9 +23,6 @@
   }
 }
 
-.btn-group.compbuttongroup{
-    margin-left: 7px;
-}
 #descTabs {
 	margin-bottom:-1px;
 }
