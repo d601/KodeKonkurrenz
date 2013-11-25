@@ -1,8 +1,3 @@
-#editor{
-    min-width: 200px;
-    min-height: 200px;
-}
-
 #challengeDescription{
     margin: 0;
     overflow-y: auto;
@@ -23,10 +18,19 @@
   }
 }
 
-#descTabs {
-	margin-bottom:-1px;
-}
 .nav-tabs > .active > a {
     color: whitesmoke !important;
     background-color: #727375 !important;
+}
+
+#editor {
+  position:relative;
+  top:15px;
+  left:15px;
+}
+
+#sideBar {
+  position:absolute;
+  top:71px;
+  right:30px;
 }
