@@ -90,7 +90,8 @@ class GamesController < ApplicationController
   # POST /games/run/
   def run_game
     directory=params[:session]
-    java=params[:data]
+    java=params[:code]
+    submit=params[:submit]
     dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
     File.open(File.join(dir, 'main.java'), 'w') do |f|
@@ -102,7 +103,11 @@ class GamesController < ApplicationController
       return render text: compile
     else
       output = %x(java main 2>&1)
-      return render text: output
+      if submit=="false"
+        return render text: output
+      else
+        return render text:'submitted'
+      end
     end
   end
 

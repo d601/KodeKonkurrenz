@@ -1,9 +1,9 @@
 <div class="competition-div row">
 	<div class="span8">
 		<div id="editor">class main{
-        public static void main(String args[]){
-                println("it works");
-        }
+	public static void main(String args[]){
+		System.out.println("it works");
+	}
 }</div>
 	</div>
 	<div class="span4" id="sideBar">
@@ -50,22 +50,30 @@
 	$(window).resize(resizeAce);
 	resizeAce();
 	$('#checkBtn').click(function(){
+		checkOrSubmit(false,function(result){
+			alert(result);
+		})
+	});
+	$('#submitBtn').click(function(){
+		checkOrSubmit(true,function(){
+			alert('submit');
+		})
+	});
+	$('#uploadBtn').click(function(){
+		alert('upload');
+	});
+	function checkOrSubmit(submitBool,customFunc){
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
-		"session":randomString,
-		"data":editor.getValue()}
+			"session":randomString,
+			"code":editor.getValue(),
+			"submit":submitBool}
 		$.ajax({
 			type:"POST",
 			url:'/games/run/',
 			data: submission,
 			success: function(result){
-				alert(result)
-				}
-			});
-	});
-	$('#submitBtn').click(function(){
-		alert('submit');
-	});
-	$('#uploadBtn').click(function(){
-		alert('upload');
-	});
+				customFunc(result);
+			}
+		});
+	}
 </script>
