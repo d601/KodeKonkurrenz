@@ -41,7 +41,11 @@
 </div>
 
 <script type="text/javascript">
-    $(function () { 
+
+var currentOpenGames = null; 
+
+
+$(function () {
     $('#container').highcharts({
         chart: {
             type: 'scatter',
@@ -71,16 +75,79 @@
             min:0,
             max:4000
         },
+        plotOptions: {
+                series: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function() {
+                              joinToGame(this.x, this.y);
+                            }
+                        }
+                    },
+                    marker: {
+                        lineWidth: 1
+                    }
+                }
+        },
         series: [{
+            id: '1',
+            color: 'blue',
             showInLegend: false,
-            data: { num: 1}
+            data: [[50, 2000], [50, 1000]]
         }],
         credits: {
             enabled: false
         }
     });
+
+    function updateGraph() {
+
+       $.getJSON( "games/open", function( data ) {
+
+            var newData = [];
+            var point = [];
+            var chart = $('#container').highcharts();
+
+            for (var i = 0; i < data.length; i++) {
+              point.push(data[i]['time_limit']);
+              point.push(data[i]['rating']);
+              newData.push(point);
+              point = [];
+            }
+
+            chart.series[0].setData(newData);
+            currentOpenGames = newData;
+       });
+    }
+
+    function joinToGame(xAxis,yAxis) {
+
+      var gameId = 0;
+
+      for (var i = 0; i < currentOpenGames.length; i++) {
+          if(currentOpenGames[i]['time_limit'] == xAxis && currentOpenGames[i]['rank'] == yAxis){
+            gameId = currentOpenGames[i]['id'];
+            break;
+          }
+          
+      }
+
+      $.get( "games/join", { gameId: gameId}, function( data ) {
+          
+            
+       });
+    }
+
+    setInterval(function() { updateGraph(); },1000);
+
 });
+
+ 
+
+
 </script>
+
 
 
 

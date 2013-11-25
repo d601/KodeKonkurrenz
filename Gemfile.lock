@@ -7,14 +7,14 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem-bootstrap.git
-  revision: ed6dca40937b5c73e0ab04c912d27313e945362b
+  revision: 1b40ed626e06b001806f2a12612d6cb757737fba
   specs:
     forem-bootstrap (0.0.1)
       bootstrap-sass (~> 2.3.2.1)
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 9d8ae4f88c30654baf991597fd109a6a2014eccc
+  revision: 58c76fc2e903fef175be4d11b5d784b87e7d0d62
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -147,7 +147,7 @@ GEM
     simple_form (3.0.0)
       actionpack (>= 4.0.0, < 4.1)
       activemodel (>= 4.0.0, < 4.1)
-    sprockets (2.10.0)
+    sprockets (2.10.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
@@ -156,8 +156,8 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (~> 2.8)
-    sshkit (1.1.0)
-      net-scp
+    sshkit (1.2.0)
+      net-scp (>= 1.1.2)
       net-ssh
       term-ansicolor
     term-ansicolor (1.2.2)
