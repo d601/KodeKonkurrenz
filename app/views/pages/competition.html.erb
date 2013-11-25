@@ -21,14 +21,23 @@
 	</div>
 </div>
 <script>
-	var randomString = '';
-	var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-	for(var i=0; i < 20; i++){
-		randomString += possible.charAt(Math.floor(Math.random() * possible.length));
-	}
 	var editor = ace.edit("editor");
 	editor.setTheme("ace/theme/clouds");
 	editor.getSession().setMode("ace/mode/java");
+
+	var randomString = '<%=	o = [('a'..'z'), ('A'..'Z'),(0..9)].map { |i| i.to_a }.flatten
+				(0...20).map{ o[rand(o.length)] }.join%>';
+	var activeEvent=false;
+	var timeLimit=.1*60*1000;
+	var startTime = new Date().getTime();
+
+	setInterval(function updateTime(){
+		var secondsLeft = Math.round((timeLimit - (new Date().getTime() - startTime))/1000);
+		var minutes = Math.floor(secondsLeft/60);
+		var seconds = ((secondsLeft%60)<10) ? '0'+secondsLeft%60 : secondsLeft%60;  
+		$('#timer').text(minutes+':'+seconds);
+		},1000);
+
 	function resizeAce() {
 		var height=$(window).height();
 		var width=$(window).width();
@@ -42,17 +51,10 @@
 	};
 	$(window).resize(resizeAce);
 	resizeAce();
-	$('#checkBtn').click(function(){
-		checkOrSubmit(false,function(result){
-			alert(result);
-		})
-	});
-	$('#submitBtn').click(function(){
-		checkOrSubmit(true,function(){
-			alert('submit');
-		})
-	});
+
 	function checkOrSubmit(submitBool,customFunc){
+		$('#checkBtn').addClass('disabled');
+		$('#submitBtn').addClass('disabled');
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
 			"code":editor.getValue(),
@@ -63,7 +65,26 @@
 			data: submission,
 			success: function(result){
 				customFunc(result);
+				activeEvent=false
+				$('#checkBtn').removeClass('disabled');
+				$('#submitBtn').removeClass('disabled');
 			}
 		});
 	}
+	$('#checkBtn').click(function(){
+		if (!activeEvent) {
+			activeEvent=true
+			checkOrSubmit(false,function(result){
+				alert(result);
+			})
+		}
+	});
+	$('#submitBtn').click(function(){
+		if(!activeEvent){
+			activeEvent=true
+			checkOrSubmit(true,function(){
+				alert('submit');
+			})
+		}
+	});
 </script>
