@@ -111,17 +111,19 @@
 					dotty = addDots();
 					doAjax('execute',function(result){
 						window.clearInterval(dotty);
-						consoleWriter(result.output)
-						$('#consoleContent>code').css('color','black');
-						$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
+						consoleWriter(result.output,'black');
+						if(result.error==""){
+							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
+						}else{
+							consoleWriter(result.error,'red');
+						}
 						activeEvent=false
 						$('#checkBtn').removeClass('disabled');
 						$('#submitBtn').removeClass('disabled');
 					});
 				}else{
 					$('#consoleContent').append(' Compilation failed:');
-					consoleWriter(result.output)
-					$('#consoleContent>code').css('color','red');
+					consoleWriter(result.output,'red')
 					activeEvent=false
 					$('#checkBtn').removeClass('disabled');
 					$('#submitBtn').removeClass('disabled');
@@ -131,7 +133,7 @@
 		}
 	});
 
-	function consoleWriter(text){
+	function consoleWriter(text,color){
 		var spl = text.split("\n");
 		for(var i=0;i<spl.length-1;i++){
 			var leadingSpace="";
@@ -148,8 +150,8 @@
 				}
 				line=line.slice(1);
 			}
-			$('#consoleContent').append('<br />'+leadingSpace+'<code id="line'+i+'"></code>');
-			$('#line'+i).text(line);
+			$('#consoleContent').append('<br />'+leadingSpace+'<code style="color:'+color+'"></code>');
+			$('#consoleContent>code').last().text(line);
 		}
 	}
 
