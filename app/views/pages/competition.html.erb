@@ -1,9 +1,5 @@
 <div class="competition-div" id="competition-div">
-	<div id="editor">class main{
-	public static void main(String args[]){
-		System.out.println("it works");
-	}
-}</div>
+	<div id="editor"></div>
 	<div class="well well-small" id="console">
 		Console:
 		<i class="icon-chevron-up pull-right" id="toggleConsole"></i>
@@ -30,6 +26,7 @@
 	var editor = ace.edit("editor");
 	editor.setTheme("ace/theme/clouds");
 	editor.getSession().setMode("ace/mode/java");
+	editor.setValue("class main{\n	public static void main(String args[]){\n		int[] array = {1,2,3};\n        for (int i =0; i<4;i++){\n            System.out.println(array[i]);\n        }\n	}\n}");
 
 	var randomString = '<%=	o = [('a'..'z'), ('A'..'Z'),(0..9)].map { |i| i.to_a }.flatten
 				(0...20).map{ o[rand(o.length)] }.join%>';
