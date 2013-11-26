@@ -4,10 +4,10 @@
 		System.out.println("it works");
 	}
 }</div>
-	<div class="well well-small" style="margin:15px;position:relative;top:15px;" id="console">
+	<div class="well well-small" id="console">
 		Console:
 		<i class="icon-chevron-up pull-right" id="toggleConsole"></i>
-		<div id="consoleContent" class="well well-small" style="overflow-y:auto;font-family:Monaco, Menlo, Consolas,'Courier New', monospace;font-size:12px;display:none;">
+		<div id="consoleContent" class="well well-small">
 		</div>
 	</div>
 	<div id="sideBar">
@@ -53,7 +53,7 @@
 	}
 	var timInt = timerInterval();
 
-	function compilingInterval(){
+	function addDots(){
 		return window.setInterval(function(){
 			$('#consoleContent').append(".");
 		},700);
@@ -78,26 +78,23 @@
 			$('#console').height(1/2.618*(height-120)-28);
 			$('#consoleContent').height(1/2.618*(height-120)-68);
 		}
+		editor.resize()
 	};
 	$(window).resize(draw);
 	draw();
 
-	function checkOrSubmit(submitBool,customFunc){
+	function doAjax(action,customFunc){
 		$('#checkBtn').addClass('disabled');
 		$('#submitBtn').addClass('disabled');
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
-			"code":editor.getValue(),
-			"submit":submitBool}
+			"code":editor.getValue()}
 		$.ajax({
 			type:"POST",
-			url:'/games/run/',
+			url:'/games/'+action,
 			data: submission,
 			success: function(result){
 				customFunc(result);
-				activeEvent=false
-				$('#checkBtn').removeClass('disabled');
-				$('#submitBtn').removeClass('disabled');
 			}
 		});
 	}
@@ -106,37 +103,60 @@
 			activeEvent=true;
 			showConsole();
 			$('#consoleContent').text("Running");
-			var compInt = compilingInterval();
-			checkOrSubmit(false,function(result){
-				window.clearInterval(compInt);
-				var spl = result.split("\n");
-				for(var i=0;i<spl.length-1;i++){
-					var leadingSpace="";
-					var line=spl[i];
-					var j = 0;
-					while(line.charAt(0)=="\t"||line.charAt(0)==" "){
-						if(line.charAt(0)=="\t"){
-							leadingSpace+="&nbsp;&nbsp;&nbsp;&nbsp;";
-						}else{
-							if(j%2==0){
-								leadingSpace+="&nbsp;";
-							}
-							j++;
-						}
-						line=line.slice(1);
-					}
-					$('#consoleContent').append('<br />'+leadingSpace+'<code id="line'+i+'" style="padding:0;margin:0;border:0;"></code>');
-					$('#line'+i).text(line);
+			var dotty = addDots();
+			doAjax('compile',function(result){
+				window.clearInterval(dotty);
+				if(result.success){
+					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
+					dotty = addDots();
+					doAjax('execute',function(result){
+						window.clearInterval(dotty);
+						consoleWriter(result.output)
+						$('#consoleContent>code').css('color','black');
+						$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
+						activeEvent=false
+						$('#checkBtn').removeClass('disabled');
+						$('#submitBtn').removeClass('disabled');
+					});
+				}else{
+					$('#consoleContent').append(' Compilation failed:');
+					consoleWriter(result.output)
+					$('#consoleContent>code').css('color','red');
+					activeEvent=false
+					$('#checkBtn').removeClass('disabled');
+					$('#submitBtn').removeClass('disabled');
 				}
+				
 			})
 		}
 	});
+
+	function consoleWriter(text){
+		var spl = text.split("\n");
+		for(var i=0;i<spl.length-1;i++){
+			var leadingSpace="";
+			var line=spl[i];
+			var j = 0;
+			while(line.charAt(0)=="\t"||line.charAt(0)==" "){
+				if(line.charAt(0)=="\t"){
+					leadingSpace+="&nbsp;&nbsp;&nbsp;&nbsp;";
+				}else{
+					if(j%2==0){
+						leadingSpace+="&nbsp;";
+					}
+					j++;
+				}
+				line=line.slice(1);
+			}
+			$('#consoleContent').append('<br />'+leadingSpace+'<code id="line'+i+'"></code>');
+			$('#line'+i).text(line);
+		}
+	}
+
 	$('#submitBtn').click(function(){
 		if(!activeEvent){
 			activeEvent=true
-			checkOrSubmit(true,function(){
-				alert('submit');
-			})
+			alert('to be implemented');
 		}
 	});
 

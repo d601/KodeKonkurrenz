@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:open_games,:run_game]
+  skip_load_and_authorize_resource only: [:open_games,:compile,:execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
 
   # GET /games
@@ -87,28 +87,35 @@ class GamesController < ApplicationController
     end
   end
 
-  # POST /games/run/
-  def run_game
+  # POST /games/compile/
+  def compile
     directory=params[:session]
     java=params[:code]
-    submit=params[:submit]
     dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
     File.open(File.join(dir, 'main.java'), 'w') do |f|
       f.puts java
     end
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    startTime = Time.now
     compile = %x(javac main.java 2>&1)
-    if compile!=""
-      return render text: compile
+    deltaTime = Time.now - startTime
+    if compile==""
+	success = true
     else
-      output = %x(java main 2>&1)
-      if submit=="false"
-        return render text: output
-      else
-        return render text:'submitted'
-      end
+	success = false
     end
+    return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
+  end
+
+  # POST /games/execute
+  def execute
+    directory=params[:session]
+    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    startTime = Time.now
+    output = %x(java main 2>&1)
+    deltaTime = Time.now - startTime
+    return render json: {"output"=>output,"deltaTime"=>deltaTime}
   end
 
   private
