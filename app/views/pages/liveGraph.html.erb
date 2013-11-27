@@ -105,19 +105,22 @@ $(function () {
 
        $.getJSON( "games/open", function( data ) {
 
-            var newData = [];
+            var pointData = [];
+            var gameData =[];
             var point = [];
             var chart = $('#container').highcharts();
 
             for (var i = 0; i < data.length; i++) {
               point.push(data[i]['time_limit']);
               point.push(data[i]['rating']);
-              newData.push(point);
+              pointData.push(point);
+              point.push(data[i]['id']);
+              gameData.push(point);
               point = [];
             }
 
-            chart.series[0].setData(newData);
-            currentOpenGames = newData;
+            chart.series[0].setData(pointData);
+            currentOpenGames = gameData;
        });
     }
 
@@ -126,16 +129,26 @@ $(function () {
       var gameId = 0;
 
       for (var i = 0; i < currentOpenGames.length; i++) {
-          if(currentOpenGames[i]['time_limit'] == xAxis && currentOpenGames[i]['rank'] == yAxis){
-            gameId = currentOpenGames[i]['id'];
+          if(currentOpenGames[i][0] == xAxis && currentOpenGames[i][1] == yAxis){
+            gameId = currentOpenGames[i][2];
             break;
           }
           
       }
 
-      $.get( "games/join", { gameId: gameId}, function( data ) {
+      $.post( "games/join", { id: gameId }, function( data ) {
           
-            
+          if(data['head'] == "ok"){
+
+            alert("it works");
+
+          window.location.replace("/games/competition/" + gameId);
+
+          }else{
+
+            alert(data['errors']);
+
+          } 
        });
     }
 
