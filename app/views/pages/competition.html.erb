@@ -1,17 +1,17 @@
 <div class="competition-div" id="competition-div">
 	<div id="editor"></div>
 	<div class="well well-small" id="console">
-		Console:
+		<strong>Console:</strong>
 		<i class="icon-chevron-up pull-right" id="toggleConsole"></i>
 		<div id="consoleContent" class="well well-small">
 		</div>
 	</div>
 	<div id="sideBar">
 		<div class="well well-small text-center" id="timer">
-       			timer
+       			<strong>00:00</strong>
 		</div>
 		<div class="tabbable well well-small">
-			Description: 
+			<strong>Description:</strong>
 			<div class="well well-small" id="challengeDescription">
               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 			</div>
@@ -44,7 +44,7 @@
 			}else{
 				var minutes = Math.floor(secondsLeft/60);
 				var seconds = ((secondsLeft%60)<10) ? '0'+secondsLeft%60 : secondsLeft%60;  
-				$('#timer').text(minutes+':'+seconds);
+				$('#timer>strong').text(minutes+':'+seconds);
 			}
 		},1000);
 	}
