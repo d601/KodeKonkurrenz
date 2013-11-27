@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:create_game, :open_games, :compile, :execute]
+  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
   require('open3')
 
