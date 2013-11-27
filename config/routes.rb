@@ -35,7 +35,7 @@ KodeKonkurrenz::Application.routes.draw do
     match '/open', to: 'games#open_games', via: 'get'
     match '/join', to: 'games#join', via: 'post'
     match '/create', to: 'games#create_game', via: 'post'
-    match '/competition', to: 'games#competition', via: 'get'
+    match '/competition/:id', to: 'games#competition', via: 'get', as: 'competition'
     match '/compile', to: 'games#compile', via: 'post'
     match '/execute', to: 'games#execute', via: 'post'
   end
