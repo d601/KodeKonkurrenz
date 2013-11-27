@@ -1,8 +1,9 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:open_games]
+  skip_load_and_authorize_resource only: [:open_games,:compile,:execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
+  require('open3')
 
   # GET /games
   # GET /games.json
@@ -84,6 +85,41 @@ class GamesController < ApplicationController
       render json: { head: ok }
     else
       render json: { errors: "Failed to join game" }, status: 422
+    end
+  end
+
+  # POST /games/compile/
+  def compile
+    directory=params[:session]
+    java=params[:code]
+    dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
+    FileUtils.mkdir_p(dir) unless File.directory?(dir)
+    File.open(File.join(dir, 'main.java'), 'w') do |f|
+      f.puts java
+    end
+    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    startTime = Time.now
+    compile = %x(javac main.java 2>&1)
+    deltaTime = Time.now - startTime
+    if compile==""
+	success = true
+    else
+	success = false
+    end
+    return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
+  end
+
+  # POST /games/execute
+  def execute
+    directory=params[:session]
+    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    startTime = Time.now
+    cmd ='java main'
+    Open3.popen3(cmd) do |i,o,e,t|
+      output=o.read
+      error=e.read
+      deltaTime = Time.now - startTime
+      return render json: {"output"=>output,"error"=>error,"deltaTime"=>deltaTime}
     end
   end
 
