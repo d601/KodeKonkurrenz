@@ -75,6 +75,11 @@ class GamesController < ApplicationController
 
   def join
     @game = Game.find(params[:id])
+    unless @game
+      render json: { errors: "Couldn't find game" }, status: 422
+      return
+    end
+
     if @game.player2_id != -1
       render json: { errors: "Game is full" }, status: 422
       return
@@ -82,7 +87,7 @@ class GamesController < ApplicationController
 
     @game.player2_id = current_user.id
     if @game.save
-      render json: { head: ok }
+      render json: { head: "ok" }
     else
       render json: { errors: "Failed to join game" }, status: 422
     end
@@ -97,8 +102,14 @@ class GamesController < ApplicationController
       render text: "Couldn't create game"
       return
     end
-    # FIXME: this redirects to the admin page, not the /competition page
-    redirect_to @game
+    redirect_to competition_path(@game)
+  end
+
+  def competition
+    @game = Game.find(params[:id])
+    unless current_user.id == @game.player1_id or current_user.id == @game.player2_id
+      render text: "You are not a player in this game!"
+    end
   end
 
   # POST /games/compile/
