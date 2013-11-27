@@ -3,6 +3,7 @@ class GamesController < ApplicationController
   load_and_authorize_resource
   skip_load_and_authorize_resource only: [:open_games,:compile,:execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
+  require('open3')
 
   # GET /games
   # GET /games.json
@@ -113,9 +114,13 @@ class GamesController < ApplicationController
     directory=params[:session]
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
     startTime = Time.now
-    output = %x(java main 2>&1)
-    deltaTime = Time.now - startTime
-    return render json: {"output"=>output,"deltaTime"=>deltaTime}
+    cmd ='java main'
+    Open3.popen3(cmd) do |i,o,e,t|
+      output=o.read
+      error=e.read
+      deltaTime = Time.now - startTime
+      return render json: {"output"=>output,"error"=>error,"deltaTime"=>deltaTime}
+    end
   end
 
   private
