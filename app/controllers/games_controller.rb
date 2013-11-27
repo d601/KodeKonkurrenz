@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:open_games,:compile,:execute]
+  skip_load_and_authorize_resource only: [:create_game, :open_games, :compile, :execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
   require('open3')
 
@@ -86,6 +86,19 @@ class GamesController < ApplicationController
     else
       render json: { errors: "Failed to join game" }, status: 422
     end
+  end
+
+  # POST /games/create
+  def create_game
+    @game = Game.new
+    @game.player1_id = current_user.id
+    @game.time_limit = params[:time_limit]
+    unless @game.save
+      render text: "Couldn't create game"
+      return
+    end
+    # FIXME: this redirects to the admin page, not the /competition page
+    redirect_to @game
   end
 
   # POST /games/compile/

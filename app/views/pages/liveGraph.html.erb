@@ -10,7 +10,7 @@
                     options_for_select((5..60)
                       .step(5)
                       .collect
-                      .with_index { |x, index| [x, index] }) %>
+                      .with_index { |x, index| [x, x] }) %>
                   <select name="rated">
                     <option value="true">Rated</option>
                     <option value="false">Unrated</option>
