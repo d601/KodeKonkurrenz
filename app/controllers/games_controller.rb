@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:open_games,:compile,:execute]
+  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
   require('open3')
 
@@ -75,6 +75,11 @@ class GamesController < ApplicationController
 
   def join
     @game = Game.find(params[:id])
+    unless @game
+      render json: { errors: "Couldn't find game" }, status: 422
+      return
+    end
+
     if @game.player2_id != -1
       render json: { errors: "Game is full" }, status: 422
       return
@@ -82,9 +87,28 @@ class GamesController < ApplicationController
 
     @game.player2_id = current_user.id
     if @game.save
-      render json: { head: ok }
+      render json: { head: "ok" }
     else
       render json: { errors: "Failed to join game" }, status: 422
+    end
+  end
+
+  # POST /games/create
+  def create_game
+    @game = Game.new
+    @game.player1_id = current_user.id
+    @game.time_limit = params[:time_limit]
+    unless @game.save
+      render text: "Couldn't create game"
+      return
+    end
+    redirect_to competition_path(@game)
+  end
+
+  def competition
+    @game = Game.find(params[:id])
+    unless current_user.id == @game.player1_id or current_user.id == @game.player2_id
+      render text: "You are not a player in this game!"
     end
   end
 

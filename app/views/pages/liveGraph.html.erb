@@ -5,27 +5,18 @@
         <div class="row-fluid">
           <div class="span2">
               <div class="well">
-
-                  <select >
-                      <option>5 Min</option>
-                      <option>10 Min</option>
-                      <option>20 Min</option>
-                      <option>30 Min</option>
-                      <option>40 Min</option>
-                      <option>50 Min</option>
-                      <option>60 Min</option>
+                <%= form_tag('/games/create') do %>
+                  <%= select_tag "time_limit",
+                    options_for_select((5..60)
+                      .step(5)
+                      .collect
+                      .with_index { |x, index| [x, x] }) %>
+                  <select name="rated">
+                    <option value="true">Rated</option>
+                    <option value="false">Unrated</option>
                   </select>
-
-                 <input type="text" placeholder="Min Rating">
-                 <input type="text" placeholder="Max Rating">
-
-                  <select>
-                      <option>Rated</option>
-                      <option>Unrated</option>
-                  </select>
-
-                 <button class="btn btn-primary" type="submit">Start Game</button>
-
+                  <%= submit_tag "Create", class: "btn btn-primary" %>
+                <% end %>
               </div>
           </div>
           <div class="span10">
@@ -105,19 +96,22 @@ $(function () {
 
        $.getJSON( "games/open", function( data ) {
 
-            var newData = [];
+            var pointData = [];
+            var gameData =[];
             var point = [];
             var chart = $('#container').highcharts();
 
             for (var i = 0; i < data.length; i++) {
               point.push(data[i]['time_limit']);
               point.push(data[i]['rating']);
-              newData.push(point);
+              pointData.push(point);
+              point.push(data[i]['id']);
+              gameData.push(point);
               point = [];
             }
 
-            chart.series[0].setData(newData);
-            currentOpenGames = newData;
+            chart.series[0].setData(pointData);
+            currentOpenGames = gameData;
        });
     }
 
@@ -126,16 +120,25 @@ $(function () {
       var gameId = 0;
 
       for (var i = 0; i < currentOpenGames.length; i++) {
-          if(currentOpenGames[i]['time_limit'] == xAxis && currentOpenGames[i]['rank'] == yAxis){
-            gameId = currentOpenGames[i]['id'];
+          if(currentOpenGames[i][0] == xAxis && currentOpenGames[i][1] == yAxis){
+            gameId = currentOpenGames[i][2];
             break;
           }
           
       }
 
-      $.get( "games/join", { gameId: gameId}, function( data ) {
+      $.post( "games/join", { id: gameId }, function( data ) {
           
-            
+          if(data['head'] == "ok"){
+
+          window.location.replace("/games/competition/" + gameId);
+
+          }else{
+
+            alert(data['errors']);
+
+          } 
+          
        });
     }
 
