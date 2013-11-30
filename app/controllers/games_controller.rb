@@ -102,9 +102,9 @@ class GamesController < ApplicationController
     compile = %x(javac main.java 2>&1)
     deltaTime = Time.now - startTime
     if compile==""
-	success = true
+      success = true
     else
-	success = false
+      success = false
     end
     return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
   end
@@ -114,13 +114,17 @@ class GamesController < ApplicationController
     directory=params[:session]
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
     startTime = Time.now
-    cmd ='java main'
-    Open3.popen3(cmd) do |i,o,e,t|
+    cmd ='timelimit -t 1 java main'
+    json = Open3.popen3(cmd) do |i,o,e,t|
       output=o.read
       error=e.read
       deltaTime = Time.now - startTime
-      return render json: {"output"=>output,"error"=>error,"deltaTime"=>deltaTime}
+      {:output=>output,:error=>error,:deltaTime=>deltaTime}
     end
+    if json[:error].include?("timelimit:")
+      json[:error] = "infinite loop dumbass\n"
+    end
+    return render json: json
   end
 
   private
