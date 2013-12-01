@@ -18,4 +18,6 @@
 //= require highcharts-more
 //= require holder
 //= require ace/ace
+//= require ace/theme-clouds
+//= require ace/mode-java
 //= require_tree .
