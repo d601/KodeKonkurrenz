@@ -1,59 +1,45 @@
-<div class="liveGraph-div">
-    <div class="container">
+<div class="border-form-div">
+	<div class="well">
         <div class="row-fluid">
-        	<div class="span12">
-	            <div class="well">
-	            	<table id="problems" class="table table-striped">
-					  	<thead>
-						    <tr>
-							    <th>Time</th>
-							    <th>Difficulty</th>
-							    <th>Category</th>
-							   
-						    </tr>
-					  	</thead>
-
-					  	<tbody>
-					    	<% @problems.each do |problem| %>
-					        	<tr id="linkToProblem">
-							        <td><%= problem.time %></td>
-							        <td><%= problem.difficulty %></td>
-							        <td><%= problem.category %></td>
-							        
-						        </tr>
-						    <% end %>
-						    <tr id="linkToProblem">
-						    	<td style="display:none"><a href="www.google.com"></a></td>
-					        	<td>30 min</td>
-						        <td>Beginner</td>
-						        <td>Loops</td>
-						        
-					        </tr>
-					        <tr id="linkToProblem">
-					        	<td>a</td>
-						        <td>b</td>
-						        <td>c</td>
-						        
-					        </tr>
-					        <tr id="linkToProblem">
-					        	<td>a</td>
-						        <td>b</td>
-						        <td>c</td>
-						       
-					        </tr>
-						</tbody>	
-					</table>
-	            </div>
-			</div>
+        	<%= form_tag('/games/create') do %>
+	        	<div>Choose Time Limit: 
+	        		<select name="time">
+	        			<% @problems.each do |p| %>
+	        				<option value="<%= p.time.to_s %>">
+	        					<%= p.time.to_s %> min
+	        				</option>
+	        			<% end %>
+			    	</select>
+		    	</div>
+		    	
+				<div>Choose Difficulty:
+	        		<select name="difficulty">
+	        			<% @problems.each do |p| %>
+	        				<option value="<%= p.difficulty.to_s %>">
+	        					<%= p.difficulty.to_s %>
+	        				</option>
+	        			<% end %>
+			    	</select>
+		    	</div>  
+		    	<div>Choose Category:
+	        		<select name="category">
+	        			<% @problems.each do |p| %>
+	        				<option value="<%= p.category.to_s %>">
+	        					<%= p.category.to_s %>
+	        				</option>
+	        			<% end %>
+			    	</select>
+		    	</div>
+	    		<br/>
+    			<%= submit_tag "Give Me a Problem", class: "btn btn-primary btn-block" %>
+           <% end %>
 		</div>
 	</div>
 </div>
-
 
 <script>
 	$("#linkToProblem").click(function() {
 		alert($(this).find("a").attr("href"));
 		windows.location.href= $(this).find("a").attr("href");
 	});
-</script>
-		
+</script>		
