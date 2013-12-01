@@ -1,0 +1,183 @@
+<div class="competition-div" id="competition-div">
+	<div id="editor"></div>
+	<div class="well well-small" id="console">
+		<strong>Console:</strong>
+		<i class="icon-chevron-up pull-right" id="toggleConsole"></i>
+		<div id="consoleContent" class="well well-small">
+		</div>
+	</div>
+	<div id="sideBar">
+		<div class="well well-small text-center" id="timer">
+       			<strong>00:00</strong>
+		</div>
+		<div class="tabbable well well-small">
+			<strong>Description:</strong>
+			<div class="well well-small" id="challengeDescription">
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			</div>
+		</div>
+		<div class="btn-group text-center" id="submissionBtns">
+			<button type="button" class="btn btn-large" id="checkBtn">Check</button>
+			<button type="button" class="btn btn-large" id="submitBtn">Submit</button>
+		</div>
+	</div>
+</div>
+<script>
+	var editor = ace.edit("editor");
+	editor.setTheme("ace/theme/clouds");
+	editor.getSession().setMode("ace/mode/java");
+	editor.setValue("class main{\n	public static void main(String args[]){\n		int[] array = {1,2,3};\n        for (int i =0; i<4;i++){\n            System.out.println(array[i]);\n        }\n	}\n}");
+
+	var randomString = '<%=	o = [('a'..'z'), ('A'..'Z'),(0..9)].map { |i| i.to_a }.flatten
+				(0...20).map{ o[rand(o.length)] }.join%>';
+	var activeEvent=false;
+	var timeLimit=30*60*1000;
+	var startTime = new Date().getTime();
+	var consoleVisible = false
+
+	function timerInterval(){
+		return window.setInterval(function(){
+			var secondsLeft = Math.round((timeLimit - (new Date().getTime() - startTime))/1000);
+			if (secondsLeft<0){
+				window.clearInterval(timInt);
+				alert('you suck');
+			}else{
+				var minutes = Math.floor(secondsLeft/60);
+				var seconds = ((secondsLeft%60)<10) ? '0'+secondsLeft%60 : secondsLeft%60;  
+				$('#timer>strong').text(minutes+':'+seconds);
+			}
+		},1000);
+	}
+	var timInt = timerInterval();
+
+	function addDots(){
+		return window.setInterval(function(){
+			$('#consoleContent').append(".");
+		},700);
+	}
+
+	function draw() {
+		var height=$(window).height();
+		var width=$(window).width();
+		$('#competition-div').height(height-90);
+		$('#competition-div').width(width-30);
+		$('#challengeDescription').height($(window).height()-300);
+		$('#sideBar').width(width/2.618-63);
+		$('#submissionBtns').width(width/2.618-63);
+		$('#editor').width(1.618/2.618*width-13);
+		$('#test').width(1.618/2.618*width-13);
+		$('#console').width(1.618/2.618*width-33);
+		if (!consoleVisible){
+			$('#editor').height(height-173);
+			$('#console').height(20);
+		}else{
+			$('#editor').height(1.618/2.618*(height-120)-7);
+			$('#console').height(1/2.618*(height-120)-28);
+			$('#consoleContent').height(1/2.618*(height-120)-68);
+		}
+		editor.resize()
+	};
+	$(window).resize(draw);
+	draw();
+
+	function doAjax(action,customFunc){
+		$('#checkBtn').addClass('disabled');
+		$('#submitBtn').addClass('disabled');
+		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
+			"session":randomString,
+			"code":editor.getValue()}
+		$.ajax({
+			type:"POST",
+			url:'/games/'+action,
+			data: submission,
+			success: function(result){
+				customFunc(result);
+			}
+		});
+	}
+	$('#checkBtn').click(function(){
+		if (!activeEvent) {
+			activeEvent=true;
+			showConsole();
+			$('#consoleContent').text("Running");
+			var dotty = addDots();
+			doAjax('compile',function(result){
+				window.clearInterval(dotty);
+				if(result.success){
+					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
+					dotty = addDots();
+					doAjax('execute',function(result){
+						window.clearInterval(dotty);
+						consoleWriter(result.output,'black');
+						if(result.error==""){
+							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
+						}else{
+							consoleWriter(result.error,'red');
+						}
+						activeEvent=false
+						$('#checkBtn').removeClass('disabled');
+						$('#submitBtn').removeClass('disabled');
+					});
+				}else{
+					$('#consoleContent').append(' Compilation failed:');
+					consoleWriter(result.output,'red')
+					activeEvent=false
+					$('#checkBtn').removeClass('disabled');
+					$('#submitBtn').removeClass('disabled');
+				}
+				
+			})
+		}
+	});
+
+	function consoleWriter(text,color){
+		var spl = text.split("\n");
+		for(var i=0;i<spl.length-1;i++){
+			var leadingSpace="";
+			var line=spl[i];
+			var j = 0;
+			while(line.charAt(0)=="\t"||line.charAt(0)==" "){
+				if(line.charAt(0)=="\t"){
+					leadingSpace+="&nbsp;&nbsp;&nbsp;&nbsp;";
+				}else{
+					if(j%2==0){
+						leadingSpace+="&nbsp;";
+					}
+					j++;
+				}
+				line=line.slice(1);
+			}
+			$('#consoleContent').append('<br />'+leadingSpace+'<code style="color:'+color+'"></code>');
+			$('#consoleContent>code').last().text(line);
+		}
+	}
+
+	$('#submitBtn').click(function(){
+		if(!activeEvent){
+			activeEvent=true
+			alert('to be implemented');
+		}
+	});
+
+	$('#toggleConsole').click(function(){
+		if(consoleVisible){
+			hideConsole();
+		}else{
+			showConsole();
+		}
+	});
+	
+	function showConsole(){
+		$('#toggleConsole').removeClass('icon-chevron-up').addClass('icon-chevron-down');
+		$('#consoleContent').css("display","block");
+		consoleVisible=true
+		draw();
+	}
+	function hideConsole(){
+		$('#toggleConsole').removeClass('icon-chevron-down').addClass('icon-chevron-up');
+		$('#consoleContent').css("display","none");
+		consoleVisible=false
+		draw();
+
+	}
+</script>

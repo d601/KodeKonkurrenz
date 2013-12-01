@@ -29,11 +29,15 @@ KodeKonkurrenz::Application.routes.draw do
   match '/practice' , to: 'problems#practice', via: 'get'
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
-  match '/competition', to: 'pages#competition', via: 'get'
   match '/admin', to: 'pages#admin', via: 'get'
 
   scope '/games' do
     match '/open', to: 'games#open_games', via: 'get'
+    match '/join', to: 'games#join', via: 'post'
+    match '/create', to: 'games#create_game', via: 'post'
+    match '/competition/:id', to: 'games#competition', via: 'get', as: 'competition'
+    match '/compile', to: 'games#compile', via: 'post'
+    match '/execute', to: 'games#execute', via: 'post'
   end
 
   scope '/admin' do

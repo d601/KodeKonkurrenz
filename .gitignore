@@ -23,3 +23,6 @@
 
 # Ignore vendor
 /vendor/bundle/
+
+# Ignore binstubs directory
+/bin

@@ -1,3 +1,5 @@
+<div class="admin-div">
+<div class="well">
 <h1>Listing games</h1>
 
 <table>
@@ -8,6 +10,7 @@
       <th>Player2</th>
       <th>Problem</th>
       <th>Winner</th>
+      <th></th>
       <th></th>
       <th></th>
       <th></th>
@@ -25,6 +28,12 @@
         <td><%= link_to 'Show', game %></td>
         <td><%= link_to 'Edit', edit_game_path(game) %></td>
         <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%= form_tag({controller: "games", action: "join"}, method: "post") do  %>
+            <%= hidden_field_tag(:id, game.id) %>
+            <%= submit_tag("Join") %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
@@ -33,3 +42,5 @@
 <br>
 
 <%= link_to 'New Game', new_game_path %>
+</div>
+</div>

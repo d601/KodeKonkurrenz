@@ -1,8 +1,9 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:open_games]
+  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
+  require('open3')
 
   # GET /games
   # GET /games.json
@@ -69,7 +70,85 @@ class GamesController < ApplicationController
     @games = Game.where(winner_id: -1).where(player2_id: -1)
     # render json will include only table attributes without asking for
     # additional details
-    render json: @games.as_json(:methods => [:rating])
+    render json: @games.as_json(only: [:id, :time_limit, :rating], methods: [:rating])
+  end
+
+  def join
+    @game = Game.find(params[:id])
+    unless @game
+      render json: { errors: "Couldn't find game" }, status: 422
+      return
+    end
+
+    if @game.player2_id != -1
+      render json: { errors: "Game is full" }, status: 422
+      return
+    end
+
+    @game.player2_id = current_user.id
+    if @game.save
+      render json: { head: "ok" }
+    else
+      render json: { errors: "Failed to join game" }, status: 422
+    end
+  end
+
+  # POST /games/create
+  def create_game
+    @game = Game.new
+    @game.player1_id = current_user.id
+    @game.time_limit = params[:time_limit]
+    unless @game.save
+      render text: "Couldn't create game"
+      return
+    end
+    redirect_to competition_path(@game)
+  end
+
+  def competition
+    @game = Game.find(params[:id])
+    unless current_user.id == @game.player1_id or current_user.id == @game.player2_id
+      render text: "You are not a player in this game!"
+    end
+  end
+
+  # POST /games/compile/
+  def compile
+    directory=params[:session]
+    java=params[:code]
+    dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
+    FileUtils.mkdir_p(dir) unless File.directory?(dir)
+    File.open(File.join(dir, 'main.java'), 'w') do |f|
+      f.puts java
+    end
+    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    startTime = Time.now
+    compile = %x(javac main.java 2>&1)
+    deltaTime = Time.now - startTime
+    if compile==""
+      success = true
+    else
+      success = false
+    end
+    return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
+  end
+
+  # POST /games/execute
+  def execute
+    directory=params[:session]
+    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+    startTime = Time.now
+    cmd ='timelimit -t 1 java main'
+    json = Open3.popen3(cmd) do |i,o,e,t|
+      output=o.read
+      error=e.read
+      deltaTime = Time.now - startTime
+      {:output=>output,:error=>error,:deltaTime=>deltaTime}
+    end
+    if json[:error].include?("timelimit:")
+      json[:error] = "infinite loop dumbass\n"
+    end
+    return render json: json
   end
 
   private
