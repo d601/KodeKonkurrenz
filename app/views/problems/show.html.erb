@@ -16,6 +16,18 @@
   <strong>Category:</strong>
   <%= @problem.category %>
 </p>
+<p>
+  <strong>Description:</strong>
+  <%= @problem.description %>
+</p>
+<p>
+  <strong>Template</strong>
+  <%= @problem.templateClass %>
+</p>
+<p>
+  <strong>Main Class:</strong>
+  <%= @problem.mainClass %>
+</p>
 
 <%= link_to 'Edit', edit_problem_path(@problem) %> |
 <%= link_to 'Back', problems_path %>
