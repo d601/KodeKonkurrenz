@@ -138,7 +138,7 @@ class GamesController < ApplicationController
     directory=params[:session]
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
     startTime = Time.now
-    cmd ='timelimit -t 1 java main'
+    cmd ='timelimit -t 10 java main'
     json = Open3.popen3(cmd) do |i,o,e,t|
       output=o.read
       error=e.read
