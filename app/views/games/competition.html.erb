@@ -99,7 +99,7 @@
 		if (!activeEvent) {
 			activeEvent=true;
 			showConsole();
-			$('#consoleContent').text("Running");
+			$('#consoleContent').text("Compiling");
 			var dotty = addDots();
 			doAjax('compile',function(result){
 				window.clearInterval(dotty);

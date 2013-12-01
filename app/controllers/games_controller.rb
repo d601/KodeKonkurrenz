@@ -146,7 +146,7 @@ class GamesController < ApplicationController
       {:output=>output,:error=>error,:deltaTime=>deltaTime}
     end
     if json[:error].include?("timelimit:")
-      json[:error] = "infinite loop dumbass\n"
+      json[:error] = "Execution took to long, do you have an infinite loop?\n"
     end
     return render json: json
   end
