@@ -98,6 +98,7 @@ class GamesController < ApplicationController
     @game = Game.new
     @game.player1_id = current_user.id
     @game.time_limit = params[:time_limit]
+    @game.problem_id = 1
     unless @game.save
       render text: "Couldn't create game"
       return
