@@ -31,7 +31,8 @@ KodeKonkurrenz::Application.routes.draw do
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
   match '/admin', to: 'pages#admin', via: 'get'
-  match 'users/:id' => 'users#show', via: 'get'
+  match '/users/:id' => 'users#show', via: 'get'
+  match '/users/update/:id' => 'users#update', via: 'get'
 
   scope '/games' do
     match '/open', to: 'games#open_games', via: 'get'
