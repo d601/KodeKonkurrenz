@@ -70,7 +70,7 @@ class GamesController < ApplicationController
     @games = Game.where(winner_id: -1).where(player2_id: -1)
     # render json will include only table attributes without asking for
     # additional details
-    render json: @games.as_json(only: [:id, :time_limit, :rating], methods: [:rating])
+    render json: @games.as_json(only: [:id, :problem_id, :time_limit, :rating], methods: [:rating])
   end
 
   def join
@@ -80,6 +80,10 @@ class GamesController < ApplicationController
       return
     end
 
+    if @game.player1_id == @game.player2_id
+      render json: { errors: "Can't join your own game" }, status: 422
+      return
+    end
     if @game.player2_id != -1
       render json: { errors: "Game is full" }, status: 422
       return
