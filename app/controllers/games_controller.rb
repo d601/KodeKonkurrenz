@@ -14,6 +14,7 @@ class GamesController < ApplicationController
   # GET /games/1
   # GET /games/1.json
   def show
+
   end
 
   # GET /games/new
@@ -119,13 +120,18 @@ class GamesController < ApplicationController
 
   # POST /games/compile/
   def compile
+    problem = Problem.find(params[:main])
     directory=params[:session]
     java=params[:code]
     dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
     FileUtils.mkdir_p(dir) unless File.directory?(dir)
     File.open(File.join(dir, 'main.java'), 'w') do |f|
+      f.puts problem.mainClass
+      f.puts
       f.puts java
     end
+    
+
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
     startTime = Time.now
     compile = %x(javac main.java 2>&1)

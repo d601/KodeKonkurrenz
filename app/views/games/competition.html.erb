@@ -1,3 +1,5 @@
+
+<% problem = Problem.find(@game.problem_id)%>
 <div class="competition-div" id="competition-div">
 	<div id="editor"></div>
 	<div class="well well-small" id="console">
@@ -8,12 +10,12 @@
 	</div>
 	<div id="sideBar">
 		<div class="well well-small text-center" id="timer">
-       			<strong>00:00</strong>
+       			<strong><%=problem.time%>:00</strong>
 		</div>
 		<div class="tabbable well well-small">
 			<strong>Description:</strong>
 			<div class="well well-small" id="challengeDescription">
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <p> <%=problem.description %></p>
 			</div>
 		</div>
 		<div class="btn-group text-center" id="submissionBtns">
@@ -26,12 +28,12 @@
 	var editor = ace.edit("editor");
 	editor.setTheme("ace/theme/clouds");
 	editor.getSession().setMode("ace/mode/java");
-	editor.setValue("class main{\n	public static void main(String args[]){\n		int[] array = {1,2,3};\n        for (int i =0; i<4;i++){\n            System.out.println(array[i]);\n        }\n	}\n}");
+	editor.setValue("<%=problem.templateClass%>");
 
 	var randomString = '<%=	o = [('a'..'z'), ('A'..'Z'),(0..9)].map { |i| i.to_a }.flatten
 				(0...20).map{ o[rand(o.length)] }.join%>';
 	var activeEvent=false;
-	var timeLimit=30*60*1000;
+	var timeLimit= <%=problem.time%> *60*1000;
 	var startTime = new Date().getTime();
 	var consoleVisible = false
 
@@ -85,7 +87,8 @@
 		$('#submitBtn').addClass('disabled');
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
-			"code":editor.getValue()}
+			"code":editor.getValue(),
+			"main": <%= @game.problem_id%>}
 		$.ajax({
 			type:"POST",
 			url:'/games/'+action,
