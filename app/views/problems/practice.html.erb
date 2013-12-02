@@ -1,0 +1,45 @@
+<div class="border-form-div">
+	<div class="well">
+        <div class="row-fluid">
+        	<%= form_tag('/games/create') do %>
+	        	<div>Choose Time Limit: 
+	        		<select name="time">
+	        			<% @problems.each do |p| %>
+	        				<option value="<%= p.time.to_s %>">
+	        					<%= p.time.to_s %> min
+	        				</option>
+	        			<% end %>
+			    	</select>
+		    	</div>
+		    	
+				<div>Choose Difficulty:
+	        		<select name="difficulty">
+	        			<% @problems.each do |p| %>
+	        				<option value="<%= p.difficulty.to_s %>">
+	        					<%= p.difficulty.to_s %>
+	        				</option>
+	        			<% end %>
+			    	</select>
+		    	</div>  
+		    	<div>Choose Category:
+	        		<select name="category">
+	        			<% @problems.each do |p| %>
+	        				<option value="<%= p.category.to_s %>">
+	        					<%= p.category.to_s %>
+	        				</option>
+	        			<% end %>
+			    	</select>
+		    	</div>
+	    		<br/>
+    			<%= submit_tag "Give Me a Problem", class: "btn btn-primary btn-block" %>
+           <% end %>
+		</div>
+	</div>
+</div>
+
+<script>
+	$("#linkToProblem").click(function() {
+		alert($(this).find("a").attr("href"));
+		windows.location.href= $(this).find("a").attr("href");
+	});
+</script>		

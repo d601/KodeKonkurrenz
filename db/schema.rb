@@ -121,9 +121,12 @@ ActiveRecord::Schema.define(version: 20131124231903) do
   end
 
   create_table "problems", force: true do |t|
-    t.decimal  "time",       precision: 10, scale: 0
+    t.decimal  "time",          precision: 10, scale: 0
     t.integer  "difficulty"
     t.integer  "category"
+    t.text     "description"
+    t.text     "mainClass"
+    t.text     "templateClass"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
