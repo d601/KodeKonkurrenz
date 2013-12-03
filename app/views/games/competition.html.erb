@@ -1,3 +1,55 @@
+<!--
+
+Game completion modals
+
+-->
+
+<!-- TODO: combine these somehow -->
+
+<div id="winModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">You win!</h3>
+  </div>
+  <div class="modal-body">
+    <p>Congratulations!</p>
+  </div>
+  <div class="modal-footer">
+    <%= link_to "Back to games", main_app.liveGraph_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<div id="otherPlayerWonModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">The other player finished before you!</h3>
+  </div>
+  <div class="modal-body">
+    <p>I am truly sorry for your lots</p>
+  </div>
+  <div class="modal-footer">
+    <%= link_to "Back to games", main_app.liveGraph_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<div id="failedModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Your solution is incorrect!</h3>
+  </div>
+  <div class="modal-body">
+    <p>If the other player manages to submit a correct solution before the timer is up, he/she will win! Otherwise, the game will be a draw.</p>
+  </div>
+  <div class="modal-footer">
+    <%= link_to "Back to games", main_app.liveGraph_path, class: "btn btn-primary" %>
+  </div>
+</div>
+
+<!--
+
+Game
+
+-->
 
 <% problem = Problem.find(@game.problem_id)%>
 <div class="competition-div" id="competition-div">
@@ -83,8 +135,7 @@
 	draw();
 
 	function doAjax(action, submission, customFunc)  {
-		$('#checkBtn').addClass('disabled');
-		$('#submitBtn').addClass('disabled');
+    disableControls();
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
 			"code":editor.getValue(),
@@ -104,6 +155,11 @@
 	$('#checkBtn').click(function() { compileAndExecute(0) });
 	$('#submitBtn').click(function() { compileAndExecute(1) });
 
+  function disableControls() {
+		$('#checkBtn').addClass('disabled');
+		$('#submitBtn').addClass('disabled');
+  }
+
   function compileAndExecute(submit) {
 		if (!activeEvent) {
 			activeEvent = true;
@@ -122,18 +178,21 @@
 							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
               if (submit == 1) {
                 if (result.lost == 1) {
-                  alert("The other player won!");
+                  $('#otherPlayerWonModal').modal('show');
+                  disableControls();
                 } else {
-                  alert("You win!");
+                  $('#winModal').modal('show');
+                  disableControls();
                 }
               }
 						} else {
 							consoleWriter(result.error,'red');
               if (submit == 1) {
-                alert("Your solution is incorrect! You lose!");
+                $('#failedModal').modal('show');
+                disableControls();
               }
 						}
-						activeEvent=false
+						activeEvent = false
 						$('#checkBtn').removeClass('disabled');
 						$('#submitBtn').removeClass('disabled');
 					});
@@ -141,6 +200,11 @@
 					$('#consoleContent').append(' Compilation failed:');
 					consoleWriter(result.output,'red')
 					activeEvent = false
+          if (submit == 1) {
+            $('#failedModal').modal('show');
+            disableControls();
+            return;
+          }
 					$('#checkBtn').removeClass('disabled');
 					$('#submitBtn').removeClass('disabled');
 				}
