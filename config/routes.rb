@@ -39,8 +39,8 @@ KodeKonkurrenz::Application.routes.draw do
     match '/join', to: 'games#join', via: 'post'
     match '/create', to: 'games#create_game', via: 'post'
     match '/competition/:id', to: 'games#competition', via: 'get', as: 'competition'
-    match '/compile', to: 'games#compile', via: 'post'
-    match '/execute', to: 'games#execute', via: 'post'
+    match '/compile', to: 'games#compile_interface', via: 'post'
+    match '/execute', to: 'games#execute_interface', via: 'post'
   end
 
   scope '/admin' do

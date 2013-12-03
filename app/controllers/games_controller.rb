@@ -119,50 +119,78 @@ class GamesController < ApplicationController
   end
 
   # POST /games/compile/
-  def compile
-    problem = Problem.find(params[:main])
-    directory=params[:session]
-    java=params[:code]
-    dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
-    FileUtils.mkdir_p(dir) unless File.directory?(dir)
-    File.open(File.join(dir, 'main.java'), 'w') do |f|
-      f.puts problem.mainClass
-      f.puts
-      f.puts java
-    end
-    
-
-    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
-    startTime = Time.now
-    compile = %x(javac main.java 2>&1)
-    deltaTime = Time.now - startTime
-    if compile==""
-      success = true
-    else
-      success = false
-    end
-    return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
+  def compile_interface
+    compile(Problem.find(params[:main]),
+            params[:session],
+            params[:code])
   end
 
   # POST /games/execute
-  def execute
-    directory=params[:session]
-    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
-    startTime = Time.now
-    cmd ='timelimit -t 10 java main'
-    json = Open3.popen3(cmd) do |i,o,e,t|
-      output=o.read
-      error=e.read
-      deltaTime = Time.now - startTime
-      {:output=>output,:error=>error,:deltaTime=>deltaTime}
-    end
-    if json[:error].include?("timelimit:")
-      json[:error] = "Execution took to long, do you have an infinite loop?\n"
-    end
-    return render json: json
+  def execute_interface
+    directory = params[:session]
+    submit = params[:submission]
+    execute(params[:game], directory, submit)
   end
 
   private
+    def compile(problem, directory, code)
+      dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
+      FileUtils.mkdir_p(dir) unless File.directory?(dir)
+      File.open(File.join(dir, 'main.java'), 'w') do |f|
+        f.puts problem.mainClass
+        f.puts
+        f.puts code
+      end
+      
+      Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+      startTime = Time.now
+      compile = %x(javac main.java 2>&1)
+      deltaTime = Time.now - startTime
+      if compile==""
+        success = true
+      else
+        success = false
+      end
+      return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
+    end
+
+    def execute(game, directory, submit)
+      Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+      startTime = Time.now
+      cmd = 'timelimit -t 10 java main'
+
+      response = Hash.new
+      json = Open3.popen3(cmd) do |i,o,e,t|
+        output = o.read
+        error = e.read
+        deltaTime = Time.now - startTime
+        
+        @game = Game.find(game)
+        if submit == "1"
+          if error == ""
+            if @game.winner_id != -1
+              response[:lost] = 1
+            else
+              @game.winner_id = current_user.id
+              @game.save
+            end
+          else 
+            response[:failed] = 1
+          end
+        end
+
+        response[:output] = output
+        response[:error] = error
+        response[:deltaTime] = deltaTime
+        response
+      end
+
+      if json[:error].include?("timelimit:")
+        json[:error] = "Execution took too long, do you have an infinite loop?\n"
+      end
+      return render json: json
+    end
+
     def load_game
       @game = Game.new(game_params)
     end

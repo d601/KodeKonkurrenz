@@ -82,13 +82,15 @@
 	$(window).resize(draw);
 	draw();
 
-	function doAjax(action,customFunc){
+	function doAjax(action, submission, customFunc)  {
 		$('#checkBtn').addClass('disabled');
 		$('#submitBtn').addClass('disabled');
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
 			"code":editor.getValue(),
-			"main": <%= @game.problem_id%>}
+			"main": <%= @game.problem_id %>,
+      "game": <%= @game.id %>,
+      "submission": submission}
 		$.ajax({
 			type:"POST",
 			url:'/games/'+action,
@@ -98,40 +100,53 @@
 			}
 		});
 	}
-	$('#checkBtn').click(function(){
+
+	$('#checkBtn').click(function() { compileAndExecute(0) });
+	$('#submitBtn').click(function() { compileAndExecute(1) });
+
+  function compileAndExecute(submit) {
 		if (!activeEvent) {
-			activeEvent=true;
+			activeEvent = true;
 			showConsole();
 			$('#consoleContent').text("Compiling");
 			var dotty = addDots();
-			doAjax('compile',function(result){
+			doAjax('compile', 0, function(result) {
 				window.clearInterval(dotty);
-				if(result.success){
+				if (result.success) {
 					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
 					dotty = addDots();
-					doAjax('execute',function(result){
+					doAjax('execute', submit, function(result) {
 						window.clearInterval(dotty);
 						consoleWriter(result.output,'black');
-						if(result.error==""){
+						if (result.error == "") {
 							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
-						}else{
+              if (submit == 1) {
+                if (result.lost == 1) {
+                  alert("The other player won!");
+                } else {
+                  alert("You win!");
+                }
+              }
+						} else {
 							consoleWriter(result.error,'red');
+              if (submit == 1) {
+                alert("Your solution is incorrect! You lose!");
+              }
 						}
 						activeEvent=false
 						$('#checkBtn').removeClass('disabled');
 						$('#submitBtn').removeClass('disabled');
 					});
-				}else{
+				} else {
 					$('#consoleContent').append(' Compilation failed:');
 					consoleWriter(result.output,'red')
-					activeEvent=false
+					activeEvent = false
 					$('#checkBtn').removeClass('disabled');
 					$('#submitBtn').removeClass('disabled');
 				}
-				
 			})
 		}
-	});
+	}
 
 	function consoleWriter(text,color){
 		var spl = text.split("\n");
