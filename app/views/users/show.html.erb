@@ -16,17 +16,6 @@
           <div class='well'>
               <h4>email: <%=user.email%></h4>
               <h4>rating: <%=user.rating%></h4>
-              <%= form_for(@user, :url => {:action => 'update', :id => @user.id}) do |f| %>
-              <%= f.label(:age, "Age") %>
-              <%= f.text_field(:age) %>
-              <%= f.label(:gender, "Gender") %>
-              <%= f.text_field(:gender) %>
-              <%= f.label(:school, "School") %>
-              <%= f.text_field(:school) %>
-              <%= f.label(:about, "About") %>
-              <%= f.text_area(:about) %>
-              <%= submit_tag("Save") %>
-              <% end %>
           </div>
           </div>
       </div>
