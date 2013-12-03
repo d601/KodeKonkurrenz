@@ -82,7 +82,7 @@
 	$(window).resize(draw);
 	draw();
 
-	function doAjax(action, successFunction, errorFunction){
+	function doAjax(action,customFunc){
 		$('#checkBtn').addClass('disabled');
 		$('#submitBtn').addClass('disabled');
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
@@ -93,55 +93,12 @@
 			type:"POST",
 			url:'/games/'+action,
 			data: submission,
-      // I don't think you need to encapsulate these. -js
-			success: function(result) {
-				successFunction(result);
+			success: function(result){
+				customFunc(result);
 			}
-      error: function(result) {
-        errorFunction(result)
 		});
 	}
-
-  function ajaxCompile()
-  {
-    if (activeEvent)
-      return;
-
-    showConsole();
-    $('#consoleContent').text("Compiling");
-    var dotty = addDots();
-  
-		doAjax('compile',
-           // Success
-           function(result) {
-             window.clearInterval(dotty);
-             $('#consoleContent').append(' Compilation complete in ' + Math.round(result.deltaTime));
-             return true; },
-           // Fail
-           function(result) {
-             return false;
-           });
-  }
-
-  function ajaxExecute()
-  {
-    $('#consoleContent').append('Executing');
-
-	  doAjax('execute',
-           // Success
-           function(result) {
-				  	 window.clearInterval(dotty);
-				  	 consoleWriter(result.output,'black');
-				  	 $('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
-           // Fail
-           function(result) {
-             consoleWriter(result.error,'red');
-           }
-    
-
 	$('#checkBtn').click(function(){
-
-    // old code
 		if (!activeEvent) {
 			activeEvent=true;
 			showConsole();
