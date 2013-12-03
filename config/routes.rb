@@ -27,12 +27,12 @@ KodeKonkurrenz::Application.routes.draw do
   match '/contactUs' , to: 'pages#contactUs', via: 'get'
   match '/privacy' , to: 'pages#privacy', via: 'get'
   match '/discuss' , to: 'pages#discuss', via: 'get'
-  match '/practice' , to: 'pages#practice', via: 'get'
+  match '/problems/practice' , to: 'problems#practice', via: 'get'
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
   match '/admin', to: 'pages#admin', via: 'get'
   match '/users/:id' => 'users#show', via: 'get'
-  match '/users/update/:id' => 'users#update', via: 'get'
+
 
   scope '/games' do
     match '/open', to: 'games#open_games', via: 'get'
