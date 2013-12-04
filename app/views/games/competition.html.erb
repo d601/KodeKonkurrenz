@@ -104,10 +104,10 @@ Game
 	}
 	var timInt = timerInterval();
 
-	function addDots(){
-		return window.setInterval(function(){
+	function addDots() {
+		return window.setInterval(function() {
 			$('#consoleContent').append(".");
-		},700);
+		}, 700);
 	}
 
 	function draw() {
@@ -134,32 +134,152 @@ Game
 	$(window).resize(draw);
 	draw();
 
-	function doAjax(action, submission, customFunc)  {
-    disableControls();
+/*
+	function doAjax(action, before)  {
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
-			"code":editor.getValue(),
-			"main": <%= @game.problem_id %>,
-      "game": <%= @game.id %>,
-      "submission": submission}
-		$.ajax({
+			"problem_id": <%= @game.problem_id %>,
+      "game_id": <%= @game.id %>
+      }
+		return $.ajax({
 			type:"POST",
-			url:'/games/'+action,
+			url:'/games/' + action,
 			data: submission,
-			success: function(result){
-				customFunc(result);
-			}
 		});
 	}
+*/
 
-	$('#checkBtn').click(function() { compileAndExecute(0) });
-	$('#submitBtn').click(function() { compileAndExecute(1) });
+	$('#checkBtn').click(function() { compileAndDo(run) });
+	$('#submitBtn').click(function() { compileAndDo(submit) });
 
   function disableControls() {
 		$('#checkBtn').addClass('disabled');
 		$('#submitBtn').addClass('disabled');
   }
 
+  function enableControls()
+  {
+		$('#checkBtn').removeClass('disabled');
+		$('#submitBtn').removeClass('disabled');
+  }
+
+  function requestEventLock()
+  {
+    if (window.activeEvent || window.gameIsEnded)
+      return false;
+
+    window.activeEvent = true;
+    disableControls();
+    return true;
+  }
+
+  function releaseEventLock()
+  {
+    if (window.gameIsEnded)
+      return;
+
+    window.activeEvent = false;
+    enableControls();
+  }
+
+// FIXME: This locking code doesn't work right with endGame().
+  function endGame()
+  {
+    window.gameIsEnded = true;
+    disableControls();
+  }
+
+  function requestCompilation()
+  {
+    // TODO: This should be $.post(), not $.ajax. $.post(), for some reason, posts to the wrong URL.
+    // I can't figure out why. -js
+    return $.ajax({
+      type: 'POST',
+      url: '/games/compile',
+      data: {
+        "<%= request_forgery_protection_token.to_s%>": "<%= form_authenticity_token%>",
+			  "problem_id": <%= @game.problem_id %>,
+        "code": editor.getValue()
+      }
+    });
+  }
+
+  function requestRun()
+  {
+    return $.ajax({
+      type: 'POST',
+      url: '/games/run',
+      data: {
+        "<%= request_forgery_protection_token.to_s%>": "<%= form_authenticity_token%>",
+        "game_id": <%= @game.id %>
+      }
+    });
+  }
+
+  // Compiles the code and runs function 'f' on success.
+  function compileAndDo(f)
+  {
+    if (!requestEventLock())
+      return true; 
+
+    showConsole();
+		$('#consoleContent').text("Compiling");
+    var dots = addDots;
+
+    // Post a compile request
+    compileXHR = requestCompilation()
+      // Compile success
+      .done(function(result) {
+				window.clearInterval(dots);
+				$('#consoleContent').append(' Compilation complete in ' + Math.round(result.deltaTime) + 'ms')
+        f();
+      })
+      // Compile failure
+      .fail(function(result) {
+				$('#consoleContent').append(' Compilation failed:');
+				consoleWriter(result.responseJSON.errors,'red')
+      })
+      // Compile exit
+      .always(function() {
+        releaseEventLock();
+      });
+  }
+
+  function run()
+  { 
+    dots = addDots;
+    // Post a run request
+    runXHR = requestRun()
+      .done(function(result) {
+			$('#consoleContent').append('<br />Execution complete in '
+                            + Math.round(result.responseJSON.deltaTime)
+                            + 'ms');
+      })
+      .fail(function(result) { 
+				consoleWriter(result.responseJSON.error, 'red');
+      });
+
+    return runXHR;
+  }
+
+  function submit()
+  {
+    runXHR = run()
+      // Player's code executes successfully
+      .done(function(result) {
+        // The other player succeeded before current player
+        if (result.responseJSON.outcome == "fail") {
+          $('#otherPlayerWonModal').modal('show');
+          return;
+        }
+        // Current player succeeded first
+        $('#winModal').modal('show');
+      })
+      .fail(function() { 
+        $('#failedModal').modal('show');
+      });
+  }
+/*
   function compileAndExecute(submit) {
 		if (!activeEvent) {
 			activeEvent = true;
@@ -211,6 +331,7 @@ Game
 			})
 		}
 	}
+*/
 
 	function consoleWriter(text,color){
 		var spl = text.split("\n");
@@ -234,13 +355,14 @@ Game
 		}
 	}
 
+/*
 	$('#submitBtn').click(function(){
 		if(!activeEvent){
 			activeEvent=true
 			alert('to be implemented');
 		}
 	});
-
+*/
 	$('#toggleConsole').click(function(){
 		if(consoleVisible){
 			hideConsole();
