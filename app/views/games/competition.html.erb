@@ -167,7 +167,6 @@ Game
     enableControls();
   }
 
-// FIXME: The locking code above doesn't work correctly with endGame(). -js
   function endGame()
   {
     window.gameIsEnded = true;
@@ -189,11 +188,11 @@ Game
     });
   }
 
-  function requestRun()
+  function requestRun(action)
   {
     return $.ajax({
       type: 'POST',
-      url: '/games/run',
+      url: '/games/' + action,
       data: {
         "<%= request_forgery_protection_token.to_s%>": "<%= form_authenticity_token%>",
         "game_id": <%= @game.id %>
@@ -230,15 +229,16 @@ Game
       });
   }
 
-  function run()
+  function run(action)
   { 
     dots = addDots;
     // Post a run request
-    runXHR = requestRun()
+    runXHR = requestRun(action || "run")
       .done(function(result) {
 			$('#consoleContent').append('<br />Execution complete in '
                             + Math.round(result.responseJSON.deltaTime)
                             + 'ms');
+      consoleWriter(result.responseJSON.output, 'black');
       })
       .fail(function(result) { 
 				consoleWriter(result.responseJSON.error, 'red');
@@ -247,11 +247,9 @@ Game
     return runXHR;
   }
 
-  // FIXME: The call is still sent to /games/run, not /games/submit. Oops.
-  // There should be some way to change the settings of an existing jqXHR object. -js
   function submit()
   {
-    runXHR = run()
+    runXHR = run("submit")
       // Player's code executes successfully
       .done(function(result) {
         // The other player succeeded before current player
@@ -264,6 +262,9 @@ Game
       })
       .fail(function() { 
         $('#failedModal').modal('show');
+      })
+      .always(function() {
+        endGame();
       });
   }
 

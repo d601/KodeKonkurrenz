@@ -148,13 +148,13 @@ class GamesController < ApplicationController
 
   # POST /games/submit
   def submit
-    game_id = params[:game]
+    game_id = params[:game_id]
+    @game = Game.find(game_id)
+
     output, error, deltaTime = execute(game_id, params[:session])
 
     response = { output: output, deltaTime: deltaTime }
     
-    @game = Game.find(game_id)
-
     # If the other player has already won, it's too late, and this player is kicked out.
     if @game.winner_id != -1
       response[:outcome] = "fail"
@@ -170,7 +170,7 @@ class GamesController < ApplicationController
     end
 
     response[:outcome] = "win"
-    @game.winner_id = current_player.id
+    @game.winner_id = current_user.id
     @game.save
 
     render json: response
