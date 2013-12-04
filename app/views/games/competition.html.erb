@@ -134,21 +134,6 @@ Game
 	$(window).resize(draw);
 	draw();
 
-/*
-	function doAjax(action, before)  {
-		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
-			"session":randomString,
-			"problem_id": <%= @game.problem_id %>,
-      "game_id": <%= @game.id %>
-      }
-		return $.ajax({
-			type:"POST",
-			url:'/games/' + action,
-			data: submission,
-		});
-	}
-*/
-
 	$('#checkBtn').click(function() { compileAndDo(run) });
 	$('#submitBtn').click(function() { compileAndDo(submit) });
 
@@ -182,7 +167,7 @@ Game
     enableControls();
   }
 
-// FIXME: This locking code doesn't work right with endGame().
+// FIXME: The locking code above doesn't work correctly with endGame(). -js
   function endGame()
   {
     window.gameIsEnded = true;
@@ -262,6 +247,8 @@ Game
     return runXHR;
   }
 
+  // FIXME: The call is still sent to /games/run, not /games/submit. Oops.
+  // There should be some way to change the settings of an existing jqXHR object. -js
   function submit()
   {
     runXHR = run()
@@ -279,59 +266,6 @@ Game
         $('#failedModal').modal('show');
       });
   }
-/*
-  function compileAndExecute(submit) {
-		if (!activeEvent) {
-			activeEvent = true;
-			showConsole();
-			$('#consoleContent').text("Compiling");
-			var dotty = addDots();
-			doAjax('compile', 0, function(result) {
-				window.clearInterval(dotty);
-				if (result.success) {
-					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
-					dotty = addDots();
-					doAjax('execute', submit, function(result) {
-						window.clearInterval(dotty);
-						consoleWriter(result.output,'black');
-						if (result.error == "") {
-							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
-              if (submit == 1) {
-                if (result.lost == 1) {
-                  $('#otherPlayerWonModal').modal('show');
-                  disableControls();
-                } else {
-                  $('#winModal').modal('show');
-                  disableControls();
-                }
-              }
-						} else {
-							consoleWriter(result.error,'red');
-              if (submit == 1) {
-                $('#failedModal').modal('show');
-                disableControls();
-              }
-						}
-						activeEvent = false
-						$('#checkBtn').removeClass('disabled');
-						$('#submitBtn').removeClass('disabled');
-					});
-				} else {
-					$('#consoleContent').append(' Compilation failed:');
-					consoleWriter(result.output,'red')
-					activeEvent = false
-          if (submit == 1) {
-            $('#failedModal').modal('show');
-            disableControls();
-            return;
-          }
-					$('#checkBtn').removeClass('disabled');
-					$('#submitBtn').removeClass('disabled');
-				}
-			})
-		}
-	}
-*/
 
 	function consoleWriter(text,color){
 		var spl = text.split("\n");
@@ -355,14 +289,6 @@ Game
 		}
 	}
 
-/*
-	$('#submitBtn').click(function(){
-		if(!activeEvent){
-			activeEvent=true
-			alert('to be implemented');
-		}
-	});
-*/
 	$('#toggleConsole').click(function(){
 		if(consoleVisible){
 			hideConsole();
