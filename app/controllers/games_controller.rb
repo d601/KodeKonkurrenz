@@ -91,7 +91,8 @@ class GamesController < ApplicationController
     end
 
     @game.player2_id = current_user.id
-    @game.joinTime = Time.now
+    time = Time.now
+    @game.joinTime = time.to_f
     if @game.save
       render json: { head: "ok" }
     else
