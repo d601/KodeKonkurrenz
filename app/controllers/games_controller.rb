@@ -100,7 +100,13 @@ class GamesController < ApplicationController
 
   # POST /games/create
   def create_game
-    @game = Game.new
+
+    if current_user == nil
+      flash[:error] = "You must be signed in inorder to create a game!"
+      return redirect_to liveGraph_path
+    else
+      @game = Game.new
+    end
     @game.player1_id = current_user.id
     @game.time_limit = params[:time_limit]
     @game.problem_id = 1

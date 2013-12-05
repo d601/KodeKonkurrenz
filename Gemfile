@@ -48,7 +48,7 @@ end
 gem 'capistrano', '~> 3.0.0', group: :development
 # gem 'capistrano-bundler'
 
-gem 'devise'
+gem 'devise', '3.2.1'
 
 gem 'forem', :github => "radar/forem", :branch => "rails4"
 
@@ -66,3 +66,5 @@ gem "highcharts-rails", "~> 3.0.0"
 # gem 'rvm-capistrano', group: :development
 
 gem 'ace-rails-ap'
+
+gem 'gravtastic'

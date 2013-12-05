@@ -5,7 +5,7 @@
         <ul class="nav pull-left">
           <%= link_to "KodeKonkurrenz", main_app.root_path, :class => 'brand' %>
           <li><%= link_to "Play", main_app.liveGraph_path %></li>
-          <li><%= link_to "Practice", main_app.practice_path %></li>
+          <li><%= link_to "Practice", main_app.problems_practice_path %></li>
           <li><%= link_to "Discuss", main_app.discuss_path %></li>
           <% if user_signed_in? and current_user.admin? %>
             <li><%= link_to "Administrate", main_app.admin_path %></li>
@@ -26,3 +26,8 @@
     </div>
   </div>
 </div>
+<% flash.each do |key, value| %>
+        <div class="<%= flash_class(key) %>">
+              <%= value %>
+        </div>
+<% end %>
