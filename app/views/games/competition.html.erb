@@ -9,7 +9,7 @@
 	</div>
 	<div id="sideBar">
 		<div class="well well-small text-center" id="timer">
-       			<strong><%=problem.time%>:00</strong>
+       			<strong>&nbsp;</strong>
 		</div>
 		<div class="tabbable well well-small">
 			<strong>Description:</strong>
@@ -33,15 +33,14 @@
 				(0...20).map{ o[rand(o.length)] }.join%>';
 	var activeEvent=false;
 	var timeLimit= <%=problem.time%> *60*1000;
-	var startTime = new Date().getTime();
+	var startTime = <%=@game.joinTime%>;
 	var consoleVisible = false
 
 	function timerInterval(){
 		return window.setInterval(function(){
-			var secondsLeft = Math.round((timeLimit - (new Date().getTime() - startTime))/1000);
+			var secondsLeft = Math.round((timeLimit - (new Date().getTime() - startTime*1000))/1000);
 			if (secondsLeft<0){
 				window.clearInterval(timInt);
-				generateLose;
 				activeEvent=true;
 				$('#checkBtn').addClass('disabled');
 				$('#submitBtn').addClass('disabled');		
@@ -211,9 +210,5 @@
 		consoleVisible=false
 		draw();
 
-	}
-
-	function generateLoss(){
-		
 	}
 </script>
