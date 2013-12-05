@@ -155,6 +155,7 @@ class GamesController < ApplicationController
   # POST /games/execute
   def execute
     directory=params[:session]
+    submitting=params[:submitting]
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
     startTime = Time.now
     cmd ='timelimit -t 10 java main'
@@ -170,10 +171,25 @@ class GamesController < ApplicationController
     if json[:error].include?("timelimit:")
       json[:error] = "Execution took to long, do you have an infinite loop?\n"
     end
+    if submitting && @game.winner != -1
+      if @game.player1_id == current_user.id
+        @game.isSubmitted == true
+      else
+        @game.isSubmitted2 == true
+      end
+      if exitCode.exitstatus == 1
+	win_game
+      else
+        lose_game
+    end
     return render json: json
   end
 
   def lose_game
+
+  end
+
+  def win_game
 
   end
 
