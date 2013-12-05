@@ -1,4 +1,3 @@
-
 <% problem = Problem.find(@game.problem_id)%>
 <div class="competition-div" id="competition-div">
 	<div id="editor"></div>
@@ -42,7 +41,10 @@
 			var secondsLeft = Math.round((timeLimit - (new Date().getTime() - startTime))/1000);
 			if (secondsLeft<0){
 				window.clearInterval(timInt);
-				alert('you suck');
+				generateLose;
+				activeEvent=true;
+				$('#checkBtn').addClass('disabled');
+				$('#submitBtn').addClass('disabled');		
 			}else{
 				var minutes = Math.floor(secondsLeft/60);
 				var seconds = ((secondsLeft%60)<10) ? '0'+secondsLeft%60 : secondsLeft%60;  
@@ -82,13 +84,16 @@
 	$(window).resize(draw);
 	draw();
 
-	function doAjax(action,customFunc){
+	function doAjax(action,submitting,customFunc){
 		$('#checkBtn').addClass('disabled');
 		$('#submitBtn').addClass('disabled');
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
 			"code":editor.getValue(),
-			"main": <%= @game.problem_id%>}
+			"player": <%= current_user.id%>,
+			"game": <%= @game.id%>,
+			"main": <%= @game.problem_id%>,
+			"submitting": submitting}
 		$.ajax({
 			type:"POST",
 			url:'/games/'+action,
@@ -104,7 +109,7 @@
 			showConsole();
 			$('#consoleContent').text("Compiling");
 			var dotty = addDots();
-			doAjax('compile',function(result){
+			doAjax('compile',false,function(result){
 				window.clearInterval(dotty);
 				if(result.success){
 					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
@@ -117,6 +122,7 @@
 						}else{
 							consoleWriter(result.error,'red');
 						}
+						alert(result.exitCode);
 						activeEvent=false
 						$('#checkBtn').removeClass('disabled');
 						$('#submitBtn').removeClass('disabled');
@@ -156,9 +162,32 @@
 	}
 
 	$('#submitBtn').click(function(){
-		if(!activeEvent){
-			activeEvent=true
-			alert('to be implemented');
+		if (!activeEvent) {
+			activeEvent=true;
+			showConsole();
+			$('#consoleContent').text("Compiling");
+			var dotty = addDots();
+			doAjax('compile',true,function(result){
+				window.clearInterval(dotty);
+				if(result.success){
+					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
+					dotty = addDots();
+					doAjax('execute',function(result){
+						window.clearInterval(dotty);
+						consoleWriter(result.output,'black');
+						if(result.error==""){
+							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
+						}else{
+							consoleWriter(result.error,'red');
+						}
+						alert(result.exitCode);
+					});
+				}else{
+					$('#consoleContent').append(' Compilation failed:');
+					consoleWriter(result.output,'red')
+				}
+				
+			})
 		}
 	});
 
@@ -182,5 +211,9 @@
 		consoleVisible=false
 		draw();
 
+	}
+
+	function generateLoss(){
+		
 	}
 </script>

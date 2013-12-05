@@ -153,13 +153,20 @@ class GamesController < ApplicationController
     json = Open3.popen3(cmd) do |i,o,e,t|
       output=o.read
       error=e.read
+      o.close
+      e.close
+      exitCode=t.value
       deltaTime = Time.now - startTime
-      {:output=>output,:error=>error,:deltaTime=>deltaTime}
+      {:output=>output,:error=>error,:deltaTime=>deltaTime,:exitCode=>exitCode.exitstatus}
     end
     if json[:error].include?("timelimit:")
       json[:error] = "Execution took to long, do you have an infinite loop?\n"
     end
     return render json: json
+  end
+
+  def lose_game
+
   end
 
   private
