@@ -1,1 +1,28 @@
-<%= render "form" %>
+<div class="user-div">
+    <div class="container users">
+        <div class="row-fluid">
+            <div class="span4">
+                <div class='well'>
+                    <ul class="thumbnails">
+                    <li class="span12">
+                        <div id="image"></div>
+                  </li>
+
+              </ul></div>
+          </div>
+          <div class="span7">
+          <div class='well'>
+            <%= render "form" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var url = Gravtastic('<%= @user.email %>', {default: 'identicon', size: 200});
+  var img = new Image();
+  img.src = url;
+  document.getElementById("image").appendChild(img);
+</script>
