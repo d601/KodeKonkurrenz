@@ -1,4 +1,3 @@
-<% user = User.find(@user.id)%>
 <div class="user-div">
     <div class="container users">
 
@@ -14,11 +13,14 @@
           </div>
           <div class="span7">
           <div class='well'>
-              <h4>Email: <%= user.email %></h4>
-              <h4>Rating: <%= user.rating %></h4>
-              <h4>Gender: <%= user.gender %></h4>
-              <h4>School: <%= user.school %></h4>
-              <h4>About: <%= user.about %></h4>
+              <h4>Email: <%= @user.email %></h4>
+              <h4>Rating: <%= @user.rating %></h4>
+              <h4>Gender: <%= @user.gender %></h4>
+              <h4>School: <%= @user.school %></h4>
+              <h4>About: <%= @user.about %></h4>
+              <% if current_user.id == @user.id %>
+                <%= link_to 'Edit', main_app.edit_user_path(@user) %>
+              <% end %>
           </div>
           </div>
       </div>
@@ -28,7 +30,7 @@
 
 <script type="text/javascript">
 
-  var url = Gravtastic('<%=user.email%>', {default: 'identicon', size: 200});
+  var url = Gravtastic('<%= @user.email %>', {default: 'identicon', size: 200});
   var img = new Image();
   img.src = url;
   document.getElementById("image").appendChild(img);

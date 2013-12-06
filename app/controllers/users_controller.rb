@@ -12,4 +12,18 @@ before_filter :authenticate_user!
         format.xml { render :xml => @user }
     end
   end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+   
+    if @user.update(params[:user].permit(:gender, :school, :about))
+      redirect_to @user
+    else
+      render 'edit'
+    end
+  end
 end
