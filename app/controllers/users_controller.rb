@@ -2,14 +2,16 @@ class UsersController < ApplicationController
 before_filter :authenticate_user!
 
   def show
-    @user = User.find(params[:id])
-    unless @user
-      render json: { errors: "Couldn't find game" }, status: 422
-      return
+    begin
+      @user = User.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      # TODO: do this inside the respond_to block with the appropriate format
+      return render text: "Invalid user ID"
     end
     respond_to do |format|
         format.html # show.html.erb
-        format.xml { render :xml => @user }
+        format.xml { render xml: @user }
+        format.json { render json: @user}
     end
   end
 
