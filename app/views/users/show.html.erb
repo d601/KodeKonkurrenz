@@ -15,12 +15,9 @@
           <div class='well'>
               <h4>Email: <%= @user.email %></h4>
               <h4>Rating: <%= @user.rating %></h4>
-              <h4>Gender: <%= @user.gender %></h4>
+              <%= best_in_place @user, :gender, type: :input %>
               <h4>School: <%= @user.school %></h4>
               <h4>About: <%= @user.about %></h4>
-              <% if current_user.id == @user.id %>
-                <%= link_to 'Edit', main_app.edit_user_path(@user) %>
-              <% end %>
           </div>
           </div>
       </div>
@@ -34,4 +31,9 @@
   var img = new Image();
   img.src = url;
   document.getElementById("image").appendChild(img);
+
+  $(document).ready(function() {
+    /* Activating Best In Place */
+    jQuery(".best_in_place").best_in_place();
+  });
 </script>

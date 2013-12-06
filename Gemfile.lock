@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 0c2ff236ff0137d4130d64863b22babc488add2c
+  revision: 0732bdf36557945186c088656b160155858fa87f
   specs:
     friendly_id (5.0.1)
       activerecord (~> 4.0.0)
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: c8ae5593190bb050ba249ca3e8a1aa34512be82e
+  revision: a6ea994127aef2528b25bf7da32ff132af71afbf
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -25,6 +25,14 @@ GIT
       select2-rails (~> 3.4.3)
       simple_form (~> 3.0.0.rc)
       workflow (= 0.8.0)
+
+GIT
+  remote: https://github.com/aaronchi/best_in_place.git
+  revision: 1152e2256afd485e66602833fd99d09d60994841
+  specs:
+    best_in_place (2.1.0)
+      jquery-rails
+      rails (>= 3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -87,8 +95,8 @@ GEM
     highcharts-rails (3.0.7)
       railties (>= 3.1)
     hike (1.2.3)
-    i18n (0.6.5)
-    jbuilder (1.5.2)
+    i18n (0.6.9)
+    jbuilder (1.5.3)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
     jquery-rails (3.0.4)
@@ -171,7 +179,7 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbolinks (1.3.1)
+    turbolinks (2.0.0)
       coffee-rails
     tzinfo (0.3.38)
     uglifier (2.3.2)
@@ -187,6 +195,7 @@ PLATFORMS
 
 DEPENDENCIES
   ace-rails-ap
+  best_in_place!
   bootstrap-sass (= 2.3.2.1)
   cancan (= 1.6.7)
   capistrano (~> 3.0.0)

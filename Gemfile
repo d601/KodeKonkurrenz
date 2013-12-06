@@ -68,3 +68,5 @@ gem "highcharts-rails", "~> 3.0.0"
 gem 'ace-rails-ap'
 
 gem 'gravtastic'
+
+gem 'best_in_place', :git => 'https://github.com/aaronchi/best_in_place.git'

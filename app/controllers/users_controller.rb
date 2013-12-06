@@ -21,9 +21,9 @@ before_filter :authenticate_user!
     @user = User.find(params[:id])
    
     if @user.update(params[:user].permit(:gender, :school, :about))
-      redirect_to @user
+      format.json { respond_with_bip(@user) }
     else
-      render 'edit'
+      format.json { respond_with_bip(@user) }
     end
   end
 end

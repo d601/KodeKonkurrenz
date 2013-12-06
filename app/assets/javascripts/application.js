@@ -21,4 +21,5 @@
 //= require ace/theme-clouds
 //= require ace/mode-java
 //= require gravtastic
+//= require best_in_place
 //= require_tree .
