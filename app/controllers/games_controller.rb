@@ -138,7 +138,6 @@ class GamesController < ApplicationController
       f.puts
       f.puts java
     end
-    
 
     Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
     startTime = Time.now
@@ -154,23 +153,52 @@ class GamesController < ApplicationController
 
   # POST /games/execute
   def execute
-    directory=params[:session]
-    Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
-    startTime = Time.now
-    cmd ='timelimit -t 10 java main'
-    json = Open3.popen3(cmd) do |i,o,e,t|
-      output=o.read
-      error=e.read
-      deltaTime = Time.now - startTime
-      {:output=>output,:error=>error,:deltaTime=>deltaTime}
+    @game = Game.find(params[:game])
+    submitting=params[:submitting]
+    results = private_execution(params[:directory])
+    if submitting && @game.winner_id != -1
+      if @game.player1_id == current_user.id
+        @game.isSubmitted == true
+      elsif @game.player2_id == current_user.id
+        @game.isSubmitted2 == true
+      end
+      if results[:exitCode] == 1
+        win_game
+      else
+        lose_game
+      end
     end
-    if json[:error].include?("timelimit:")
-      json[:error] = "Execution took to long, do you have an infinite loop?\n"
-    end
-    return render json: json
+    return render json: {:output=>results[:output],:error=>results[:error],:deltaTime=>results[:deltaTime],:winnerExists=>@game.winner_id == -1?false:true}
+  end
+
+  def lose_game
+
+  end
+
+  def win_game
+
   end
 
   private
+    def private_execution(directory)
+      Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
+      startTime = Time.now
+      cmd ='timelimit -t 10 java main'
+      results = Open3.popen3(cmd) do |i,o,e,t|
+        output=o.read
+        error=e.read
+        o.close
+        e.close
+        exitCode=t.value
+        deltaTime = Time.now - startTime
+        {:output=>output,:error=>error,:deltaTime=>deltaTime,:exitCode=>exitCode.exitstatus}
+      end
+      if results[:error].include?("timelimit:")
+        results[:error] = "Execution took to long, do you have an infinite loop?\n"
+      end
+      return results
+    end
+
     def load_game
       @game = Game.new(game_params)
     end
