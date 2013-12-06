@@ -15,9 +15,10 @@
           <div class='well'>
               <h4>Email: <%= @user.email %></h4>
               <h4>Rating: <%= @user.rating %></h4>
-              <%= best_in_place @user, :gender, type: :input %>
-              <h4>School: <%= @user.school %></h4>
-              <h4>About: <%= @user.about %></h4>
+              <% can_edit = (@user.id == current_user.id) %>
+              <h4>Gender: <%= best_in_place_if can_edit, @user, :gender, type: :input %></h4>
+              <h4>School: <%= best_in_place_if can_edit, @user, :school, type: :input %></h4>
+              <h4>About: <%= best_in_place_if can_edit, @user, :about, type: :input %></h4>
           </div>
           </div>
       </div>

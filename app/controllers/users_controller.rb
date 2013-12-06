@@ -20,10 +20,12 @@ before_filter :authenticate_user!
   def update
     @user = User.find(params[:id])
    
-    if @user.update(params[:user].permit(:gender, :school, :about))
-      format.json { respond_with_bip(@user) }
-    else
-      format.json { respond_with_bip(@user) }
+    respond_to do |format|
+      if @user.update(params[:user].permit(:gender, :school, :about))
+        format.json { respond_with_bip(@user) }
+      else
+        format.json { respond_with_bip(@user) }
+      end
     end
   end
 end
