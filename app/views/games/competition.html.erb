@@ -24,26 +24,42 @@
 	</div>
 </div>
 <script>
+	disableButtons;
 	var editor = ace.edit("editor");
 	editor.setTheme("ace/theme/clouds");
 	editor.getSession().setMode("ace/mode/java");
 	editor.setValue("<%=problem.templateClass%>");
 
+	var secondsLeft = <%=(problem.time*60 - (Time.now.to_f - @game.joinTime.to_f)).round%>;
 	var randomString = '<%=	o = [('a'..'z'), ('A'..'Z'),(0..9)].map { |i| i.to_a }.flatten
 				(0...20).map{ o[rand(o.length)] }.join%>';
 	var activeEvent=false;
-	var timeLimit= <%=problem.time%> *60*1000;
-	var startTime = <%=@game.joinTime%>;
-	var consoleVisible = false
+	var consoleVisible = false;
+
+	var dotty;
+
+	<% if @game.winner_id != -1 %>
+		enableButtons;
+	<%end%>
+	
+	function disableButtons(){
+		activeEvent=true
+		$('#checkBtn').addClass('disabled');
+		$('#submitBtn').addClass('disabled');	
+	}
+
+	function enableButtons(){
+		activeEvent=false
+		$('#checkBtn').removeClass('disabled');
+		$('#submitBtn').removeClass('disabled');	
+	}
 
 	function timerInterval(){
 		return window.setInterval(function(){
-			var secondsLeft = Math.round((timeLimit - (new Date().getTime() - startTime*1000))/1000);
+			secondsLeft--;
 			if (secondsLeft<0){
 				window.clearInterval(timInt);
-				activeEvent=true;
-				$('#checkBtn').addClass('disabled');
-				$('#submitBtn').addClass('disabled');		
+				disableButtons;
 			}else{
 				var minutes = Math.floor(secondsLeft/60);
 				var seconds = ((secondsLeft%60)<10) ? '0'+secondsLeft%60 : secondsLeft%60;  
@@ -83,60 +99,60 @@
 	$(window).resize(draw);
 	draw();
 
-	function doAjax(action,submitting,customFunc){
-		$('#checkBtn').addClass('disabled');
-		$('#submitBtn').addClass('disabled');
+	function doAjax(action,isSubmission,customFunc){
 		submission = {"<%= request_forgery_protection_token.to_s%>":"<%= form_authenticity_token%>",
 			"session":randomString,
 			"code":editor.getValue(),
 			"player": <%= current_user.id%>,
 			"game": <%= @game.id%>,
 			"main": <%= @game.problem_id%>,
-			"submitting": submitting}
+			"submitting": isSubmission}
 		$.ajax({
 			type:"POST",
 			url:'/games/'+action,
 			data: submission,
 			success: function(result){
-				customFunc(result);
+				customFunc(isSubmission,result);
 			}
 		});
 	}
 	$('#checkBtn').click(function(){
-		if (!activeEvent) {
-			activeEvent=true;
-			showConsole();
-			$('#consoleContent').text("Compiling");
-			var dotty = addDots();
-			doAjax('compile',false,function(result){
-				window.clearInterval(dotty);
-				if(result.success){
-					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
-					dotty = addDots();
-					doAjax('execute',function(result){
-						window.clearInterval(dotty);
-						consoleWriter(result.output,'black');
-						if(result.error==""){
-							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
-						}else{
-							consoleWriter(result.error,'red');
-						}
-						alert(result.exitCode);
-						activeEvent=false
-						$('#checkBtn').removeClass('disabled');
-						$('#submitBtn').removeClass('disabled');
-					});
-				}else{
-					$('#consoleContent').append(' Compilation failed:');
-					consoleWriter(result.output,'red')
-					activeEvent=false
-					$('#checkBtn').removeClass('disabled');
-					$('#submitBtn').removeClass('disabled');
-				}
-				
-			})
-		}
+		if (!activeEvent) {compilation(false);};
 	});
+
+	$('#submitBtn').click(function(){
+		if (!activeEvent) {compilation(true);};
+	});
+
+	function compilation(isSubmission){
+		disableButtons();
+		showConsole();
+		$('#consoleContent').text("Compiling");
+		dotty = addDots();
+		doAjax('compile',isSubmission,function(isSubmission,result){
+			window.clearInterval(dotty);
+			if(result.success){
+				$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
+				dotty = addDots();
+				doAjax('execute',isSubmission,execution);
+			}else{
+				$('#consoleContent').append(' Compilation failed:');
+				consoleWriter(result.output,'red');
+				if(!isSubmission){enableButtons();};
+			}
+		});
+	}
+
+	function execution(isSubmission,result){
+		window.clearInterval(dotty);
+		consoleWriter(result.output,'black');
+		if(result.error==""){
+			$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
+		}else{
+			consoleWriter(result.error,'red');
+		}
+		if(!isSubmission){enableButtons();};
+	}
 
 	function consoleWriter(text,color){
 		var spl = text.split("\n");
@@ -159,36 +175,6 @@
 			$('#consoleContent>code').last().text(line);
 		}
 	}
-
-	$('#submitBtn').click(function(){
-		if (!activeEvent) {
-			activeEvent=true;
-			showConsole();
-			$('#consoleContent').text("Compiling");
-			var dotty = addDots();
-			doAjax('compile',true,function(result){
-				window.clearInterval(dotty);
-				if(result.success){
-					$('#consoleContent').append(' Compilation complete in '+Math.round(result.deltaTime)+'ms<br />Executing');
-					dotty = addDots();
-					doAjax('execute',function(result){
-						window.clearInterval(dotty);
-						consoleWriter(result.output,'black');
-						if(result.error==""){
-							$('#consoleContent').append('<br />Execution complete in '+Math.round(result.deltaTime)+'ms');
-						}else{
-							consoleWriter(result.error,'red');
-						}
-						alert(result.exitCode);
-					});
-				}else{
-					$('#consoleContent').append(' Compilation failed:');
-					consoleWriter(result.output,'red')
-				}
-				
-			})
-		}
-	});
 
 	$('#toggleConsole').click(function(){
 		if(consoleVisible){
