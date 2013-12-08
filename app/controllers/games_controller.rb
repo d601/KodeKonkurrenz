@@ -159,7 +159,7 @@ class GamesController < ApplicationController
   def execute
     @game = Game.find(params[:game])
     submitting = params[:submitting]
-    results = private_execution(params[:directory])
+    results = private_execution(params[:session])
 
     if submitting == "true" and @game.winner_id == -1
       if @game.player1_id == current_user.id
@@ -179,7 +179,12 @@ class GamesController < ApplicationController
 
     @game.save
 
-    return render json: {:output=>results[:output],:error=>results[:error],:deltaTime=>results[:deltaTime],:winnerExists=>@game.winner_id == -1?false:true}
+    return render json: {
+      output: results[:output],
+      error: results[:error],
+      deltaTime: results[:deltaTime],
+      winnerExists: @game.winner_id == -1 ? false : true,
+      winner: @game.winner_id }
   end
 
   # GET /games/status/:id

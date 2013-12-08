@@ -54,6 +54,31 @@
 		$('#submitBtn').removeClass('disabled');	
 	}
 
+  function winGame() {
+    alert("You win!");
+  }
+
+  function loseGame() {
+    alert("The other player won!");
+  }
+
+  function drawGame() {
+    alert("It's a draw!");
+  }
+
+  function handleWinnerID(ID) {
+    if (ID == 0) {
+      drawGame();
+    } else if (ID != <%= current_user.id %>) {
+      loseGame();
+    } else if (ID == <%= current_user.id %>) {
+      winGame();
+    } else {
+      // This code should never be reached (famous last words)!
+      alert("Hey guys we got a big error here");
+    } 
+  } 
+
 	function timerInterval(){
 		return window.setInterval(function(){
 			secondsLeft--;
@@ -69,25 +94,17 @@
 	}
 	var timInt = timerInterval();
 
-  function getGameStatusInterval() {
+  function getGameStatus() {
     $.get('/games/status/<%= @game.id %>')
       .done(function(result) {
         if (result.status == 'finished') {
-          alert("Game is over!");
-          if (result.winner == 0) {
-            alert("It's a draw!");
-          } else if (result.winner != <%= current_user.id %>) {
-            alert("The other player won!");
-          } else {
-            // This code should never be reached (famous last words), because
-            // the player will have used the submit button!
-            alert("Something bad happened! Check your internet connection!");
-          }
+          window.clearInterval(statusInterval);
+          handleWinnerID(result.winner);
         }
       });
   }
 
-  var statusInterval = window.setInterval(getGameStatusInterval, 6000);
+  window.statusInterval = window.setInterval(getGameStatus, 6000);
 
 	function addDots(){
 		return window.setInterval(function(){
@@ -171,7 +188,11 @@
 		}else{
 			consoleWriter(result.error,'red');
 		}
-		if(!isSubmission){enableButtons();};
+		if(!isSubmission){
+      enableButtons();
+      return;
+      }
+    handleWinnerID(result.winner);
 	}
 
 	function consoleWriter(text,color){
