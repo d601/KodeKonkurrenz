@@ -69,6 +69,26 @@
 	}
 	var timInt = timerInterval();
 
+  function getGameStatusInterval() {
+    $.get('/games/status/<%= @game.id %>')
+      .done(function(result) {
+        if (result.status == 'finished') {
+          alert("Game is over!");
+          if (result.winner == 0) {
+            alert("It's a draw!");
+          } else if (result.winner != <%= current_user.id %>) {
+            alert("The other player won!");
+          } else {
+            // This code should never be reached (famous last words), because
+            // the player will have used the submit button!
+            alert("Something bad happened! Check your internet connection!");
+          }
+        }
+      });
+  }
+
+  var statusInterval = window.setInterval(getGameStatusInterval, 6000);
+
 	function addDots(){
 		return window.setInterval(function(){
 			$('#consoleContent').append(".");

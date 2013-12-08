@@ -93,6 +93,7 @@ class GamesController < ApplicationController
     @game.player2_id = current_user.id
     time = Time.now
     @game.joinTime = time.to_f
+    @game.started_at = time
     if @game.save
       render json: { head: "ok" }
     else
@@ -166,7 +167,10 @@ class GamesController < ApplicationController
       elsif @game.player2_id == current_user.id
         @game.isSubmitted2 = true
       end
-      if results[:exitCode] == 1
+    
+      if @game.has_ended?
+        draw_game
+      elsif results[:exitCode] == 1
         win_game
       else
         lose_game
@@ -178,10 +182,26 @@ class GamesController < ApplicationController
     return render json: {:output=>results[:output],:error=>results[:error],:deltaTime=>results[:deltaTime],:winnerExists=>@game.winner_id == -1?false:true}
   end
 
+  # GET /games/status/:id
+  # The client will periodically poll the server to see if the other player has
+  # won (or the timer is up).
+  def status
+    unless @game.has_ended?
+      return render json: {status: 'active'}
+    end
+
+    # Do server-side draw calculations if the timer's up and there's no winner
+    draw_game if @game.winner_id == -1
+
+    return render json: {status: 'finished', winner: @game.winner_id}
+  end
+
   # There's probably a way to rewrite this so that win_game() is called with
   # a user, and then the current lose/win_game() functions are replaced
   # with wrapper functions that call win_game() instead. This works for now,
   # though.
+
+  # Also, these win/lose/draw methods should be in the Game model.
   
   def lose_game
     if @game.isSubmitted
@@ -191,6 +211,8 @@ class GamesController < ApplicationController
       @game.winner_id = @game.player1_id
       winner = User.find(@game.player1_id)
     end
+
+    @game.save
     
     update_rating(winner, current_user)
   end
@@ -204,14 +226,26 @@ class GamesController < ApplicationController
         loser = User.find(@game.player1_id)
       end
 
+      @game.save
+
       update_rating(current_user, loser)
+  end
+
+  def draw_game
+    # TODO: magic values in the DB are bad, IMO. -1 for unfinished and 0 for
+    # draw could be replaced with boolean columns in the future. -js
+    @game.winner_id = 0
+    update_rating(User.find(@game.player1_id),
+                  User.find(@game.player2_id),
+                  'draw')
+    @game.save
   end
 
   private
     # winner and loser are User objects, not IDs
     def update_rating(winner, loser, result = 'win')
       if result == 'draw'
-        winner_result, loser_result = 0.5
+        winner_result, loser_result = 0.5, 0.5
       else
         winner_result, loser_result = 1, 0
       end
