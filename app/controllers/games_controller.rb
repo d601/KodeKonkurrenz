@@ -122,7 +122,10 @@ class GamesController < ApplicationController
   def competition
     @game = Game.find(params[:id])
     unless current_user.id == @game.player1_id or current_user.id == @game.player2_id
-      render text: "You are not a player in this game!"
+      return render text: "You are not a player in this game!"
+    end
+    if @game.winner_id != -1
+      return render text: "This game has ended!"
     end
   end
 
@@ -154,13 +157,14 @@ class GamesController < ApplicationController
   # POST /games/execute
   def execute
     @game = Game.find(params[:game])
-    submitting=params[:submitting]
+    submitting = params[:submitting]
     results = private_execution(params[:directory])
-    if submitting && @game.winner_id != -1
+
+    if submitting == "true" and @game.winner_id == -1
       if @game.player1_id == current_user.id
-        @game.isSubmitted == true
+        @game.isSubmitted = true
       elsif @game.player2_id == current_user.id
-        @game.isSubmitted2 == true
+        @game.isSubmitted2 = true
       end
       if results[:exitCode] == 1
         win_game
@@ -168,18 +172,73 @@ class GamesController < ApplicationController
         lose_game
       end
     end
+
+    @game.save
+
     return render json: {:output=>results[:output],:error=>results[:error],:deltaTime=>results[:deltaTime],:winnerExists=>@game.winner_id == -1?false:true}
   end
 
+  # There's probably a way to rewrite this so that win_game() is called with
+  # a user, and then the current lose/win_game() functions are replaced
+  # with wrapper functions that call win_game() instead. This works for now,
+  # though.
+  
   def lose_game
-
+    if @game.isSubmitted
+      @game.winner_id = @game.player2_id
+      winner = User.find(@game.player2_id)
+    elsif @game.isSubmitted2
+      @game.winner_id = @game.player1_id
+      winner = User.find(@game.player1_id)
+    end
+    
+    update_rating(winner, current_user)
   end
 
   def win_game
+    @game.winner_id = current_user.id
 
+      if @game.isSubmitted
+        loser = User.find(@game.player2_id)
+      elsif @game.isSubmitted2
+        loser = User.find(@game.player1_id)
+      end
+
+      update_rating(current_user, loser)
   end
 
   private
+    # winner and loser are User objects, not IDs
+    def update_rating(winner, loser, result = 'win')
+      if result == 'draw'
+        winner_result, loser_result = 0.5
+      else
+        winner_result, loser_result = 1, 0
+      end
+      winner.rating += calculate_elo(winner_result, winner.rating, loser.rating)
+      loser.rating += calculate_elo(loser_result, winner.rating, loser.rating)
+      winner.save
+      loser.save
+    end
+
+    # Formula from here: http://www.chess-mind.com/en/elo-system
+    # s = score: 1 = won, 0 = lost, 0.5 = draw
+    # f = f factor, us. 400, larger makes it easier to gain/lose points
+    def calculate_elo(s, score1, score2)
+      d = (score1 - score2).abs
+      f = 400
+      
+      k = if score1 > 2400 and score2 > 2400
+            16
+          elsif score1 < 2100 or score2 < 2100
+            32
+          else
+            24
+          end
+
+      dElo = (k * (s - (1 / (10 ** ((-d / f) + 1)))))
+    end
+
     def private_execution(directory)
       Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
       startTime = Time.now
