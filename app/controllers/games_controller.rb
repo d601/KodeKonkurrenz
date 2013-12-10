@@ -235,6 +235,10 @@ class GamesController < ApplicationController
   # The client will periodically poll the server to see if the other player has
   # won (or the timer is up).
   def status
+    unless @game.started_at
+      return render json: {status: 'inactive'}
+    return
+
     unless @game.has_ended?
       return render json: {status: 'active'}
     end
