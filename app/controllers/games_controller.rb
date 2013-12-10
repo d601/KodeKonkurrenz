@@ -168,11 +168,16 @@ class GamesController < ApplicationController
         @game.isSubmitted2 = true
       end
     
+      p "******************* DEBUG ********************"
+      p results.inspect
       if @game.has_ended?
+        p "drawing game"
         draw_game
       elsif results[:exitCode] == 1
+        p "winning game"
         win_game
       else
+        p "losing game"
         lose_game
       end
     end
