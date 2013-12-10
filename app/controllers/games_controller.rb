@@ -94,6 +94,7 @@ class GamesController < ApplicationController
 
     time = Time.now
     @game.joinTime = time.to_f
+    @game.started_at = time
     if @game.save
       render json: { head: "ok" }
     else
@@ -163,6 +164,9 @@ class GamesController < ApplicationController
       flash[:error] = "You are not a player in this game!"
       return redirect_to root_path
     end
+    if @game.winner_id != -1
+      return render text: "This game has ended!"
+    end
   end
 
   # POST /games/compile/
@@ -193,32 +197,131 @@ class GamesController < ApplicationController
   # POST /games/execute
   def execute
     @game = Game.find(params[:game])
-    submitting=params[:submitting]
-    results = private_execution(params[:directory])
-    if submitting && @game.winner_id != -1
+    submitting = params[:submitting]
+    results = private_execution(params[:session])
+
+    if submitting == "true" and @game.winner_id == -1
       if @game.player1_id == current_user.id
-        @game.isSubmitted == true
+        @game.isSubmitted = true
       elsif @game.player2_id == current_user.id
-        @game.isSubmitted2 == true
+        @game.isSubmitted2 = true
       end
-      if results[:exitCode] == 1
+    
+      p "******************* DEBUG ********************"
+      p results.inspect
+      if @game.has_ended?
+        p "drawing game"
+        draw_game
+      elsif results[:exitCode] == 1
+        p "winning game"
         win_game
       else
+        p "losing game"
         lose_game
       end
     end
-    return render json: {:output=>results[:output],:error=>results[:error],:deltaTime=>results[:deltaTime],:winnerExists=>@game.winner_id == -1?false:true}
+
+    @game.save
+
+    return render json: {
+      output: results[:output],
+      error: results[:error],
+      deltaTime: results[:deltaTime],
+      winnerExists: @game.winner_id == -1 ? false : true,
+      winner: @game.winner_id }
   end
 
-  def lose_game
+  # GET /games/status/:id
+  # The client will periodically poll the server to see if the other player has
+  # won (or the timer is up).
+  def status
+    unless @game.has_ended?
+      return render json: {status: 'active'}
+    end
 
+    # Do server-side draw calculations if the timer's up and there's no winner
+    draw_game if @game.winner_id == -1
+
+    return render json: {status: 'finished', winner: @game.winner_id}
+  end
+
+  # There's probably a way to rewrite this so that win_game() is called with
+  # a user, and then the current lose/win_game() functions are replaced
+  # with wrapper functions that call win_game() instead. This works for now,
+  # though.
+
+  # Also, these win/lose/draw methods should be in the Game model.
+  
+  def lose_game
+    if @game.isSubmitted
+      @game.winner_id = @game.player2_id
+      winner = User.find(@game.player2_id)
+    elsif @game.isSubmitted2
+      @game.winner_id = @game.player1_id
+      winner = User.find(@game.player1_id)
+    end
+
+    @game.save
+    
+    update_rating(winner, current_user)
   end
 
   def win_game
+    @game.winner_id = current_user.id
 
+      if @game.isSubmitted
+        loser = User.find(@game.player2_id)
+      elsif @game.isSubmitted2
+        loser = User.find(@game.player1_id)
+      end
+
+      @game.save
+
+      update_rating(current_user, loser)
+  end
+
+  def draw_game
+    # TODO: magic values in the DB are bad, IMO. -1 for unfinished and 0 for
+    # draw could be replaced with boolean columns in the future. -js
+    @game.winner_id = 0
+    update_rating(User.find(@game.player1_id),
+                  User.find(@game.player2_id),
+                  'draw')
+    @game.save
   end
 
   private
+    # winner and loser are User objects, not IDs
+    def update_rating(winner, loser, result = 'win')
+      if result == 'draw'
+        winner_result, loser_result = 0.5, 0.5
+      else
+        winner_result, loser_result = 1, 0
+      end
+      winner.rating += calculate_elo(winner_result, winner.rating, loser.rating)
+      loser.rating += calculate_elo(loser_result, winner.rating, loser.rating)
+      winner.save
+      loser.save
+    end
+
+    # Formula from here: http://www.chess-mind.com/en/elo-system
+    # s = score: 1 = won, 0 = lost, 0.5 = draw
+    # f = f factor, us. 400, larger makes it easier to gain/lose points
+    def calculate_elo(s, score1, score2)
+      d = (score1 - score2).abs
+      f = 400
+      
+      k = if score1 > 2400 and score2 > 2400
+            16
+          elsif score1 < 2100 or score2 < 2100
+            32
+          else
+            24
+          end
+
+      dElo = (k * (s - (1 / (10 ** ((-d / f) + 1)))))
+    end
+
     def private_execution(directory)
       Dir.chdir "#{Rails.root}/tmp/java/#{directory}/"
       startTime = Time.now

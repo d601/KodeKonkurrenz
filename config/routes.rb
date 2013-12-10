@@ -44,6 +44,7 @@ KodeKonkurrenz::Application.routes.draw do
     match '/competition/:id', to: 'games#competition', via: 'get', as: 'competition'
     match '/compile', to: 'games#compile', via: 'post'
     match '/execute', to: 'games#execute', via: 'post'
+    match '/status/:id', to: 'games#status', via: 'get'
   end
 
   scope '/admin' do
