@@ -237,7 +237,7 @@ class GamesController < ApplicationController
   def status
     unless @game.started_at
       return render json: {status: 'inactive'}
-    return
+    end
 
     unless @game.has_ended?
       return render json: {status: 'active'}
