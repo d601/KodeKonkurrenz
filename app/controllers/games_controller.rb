@@ -68,7 +68,8 @@ class GamesController < ApplicationController
 
   # Public actions - accessible by non-admins
   def open_games
-    @games = Game.where(winner_id: -1).where(player2_id: -1)
+    #doesn't display practice games open games
+    @games = Game.where(winner_id: -1).where(player2_id: -1).where(isPractice: false)
     # render json will include only table attributes without asking for
     # additional details
     render json: @games.as_json(only: [:id, :problem_id, :time_limit, :rating], methods: [:rating])
@@ -80,6 +81,7 @@ class GamesController < ApplicationController
       render json: { errors: "Couldn't find game" }, status: 422
       return
     end
+    @game.player2_id = current_user.id
 
     if @game.player1_id == @game.player2_id
       render json: { errors: "Can't join your own game" }, status: 422
@@ -90,7 +92,6 @@ class GamesController < ApplicationController
       return
     end
 
-    @game.player2_id = current_user.id
     time = Time.now
     @game.joinTime = time.to_f
     if @game.save
@@ -111,10 +112,47 @@ class GamesController < ApplicationController
     end
     @game.player1_id = current_user.id
     @game.time_limit = params[:time_limit]
-    @game.problem_id = 1
+    #randomly choose from all possible problem id's
+    #Later restrict people from seeing the same problems. 
+    @problem = Problem.pluck(:id)
+    @problem = @problem.sample(1)
+    @game.problem_id = @problem[0]
+    @game.rated = params[:rated]
     unless @game.save
-      render text: "Couldn't create game"
-      return
+      flash[:error] = "couldn't create game =-("
+      return redirect_to liveGraph_path
+    end
+    #show newly created game in live graph. Eventually remove redirection here.
+    flash[:success] = "Your game has been created!"
+    redirect_to liveGraph_path
+  end
+
+  def create_game_practice
+
+    if current_user == nil
+      flash[:error] = "You must be signed in inorder to practice!"
+      return redirect_to problems_practice_path
+    else
+      @game = Game.new
+    end
+    @game.player1_id = current_user.id
+    @game.player2_id = -1
+    @game.time_limit = params[:time].to_f
+    @problem = Problem.where(time: params[:time].to_f).where(difficulty: Integer(params[:difficulty])).where(category: Integer(params[:category])).select(:id).collect(&:id)
+    #randomly choose from all possible problem id's
+    if @problem.empty?
+      flash[:error] = "There is no game with those specifications. Sorry. Try Again!"
+      return redirect_to problems_practice_path
+    end
+    #Later restrict people from seeing the same problems.
+    @problem = @problem.sample(1)
+    @game.problem_id = @problem[0]
+    @game.isPractice = true
+    time = Time.now
+    @game.joinTime = time.to_f
+    unless @game.save
+      flash[:error] = "Couldn't create the game =-("
+      return redirect_to problems_practice_path
     end
     redirect_to competition_path(@game)
   end
@@ -122,7 +160,8 @@ class GamesController < ApplicationController
   def competition
     @game = Game.find(params[:id])
     unless current_user.id == @game.player1_id or current_user.id == @game.player2_id
-      render text: "You are not a player in this game!"
+      flash[:error] = "You are not a player in this game!"
+      return redirect_to root_path
     end
   end
 
@@ -210,6 +249,6 @@ class GamesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def game_params
-      params.require(:game).permit(:time_limit, :player1_id, :player2_id, :problem_id, :winner_id)
+      params.require(:game).permit(:time_limit, :player1_id, :player2_id, :problem_id, :winner_id, :isPractice)
     end
 end

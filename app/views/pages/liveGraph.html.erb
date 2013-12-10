@@ -1,4 +1,4 @@
-
+<!-- implement staying on the page after creating a game and wait for the click action to send both players into the game-->
 <div class="liveGraph-div">
 
     <div class="container">
@@ -81,11 +81,16 @@ $(function () {
                     }
                 }
         },
+        tooltip: {
+            formatter: function() {
+                 return "<strong>Time Limit:</strong>" + this.x + '<br/>' + "<strong>Player Rating:</strong>" +this.y ;
+            }
+        },
         series: [{
             id: '1',
             color: 'blue',
             showInLegend: false,
-            data: [[50, 2000], [50, 1000]]
+            data: []
         }],
         credits: {
             enabled: false
@@ -128,19 +133,18 @@ $(function () {
           
       }
 
-      $.post( "games/join", { id: gameId }, function( data ) {
-          
+      $.post( "games/join", { id: gameId }, function( data ) {})
+
+        .done(function(data) {
           if(data['head'] == "ok"){
 
           window.location.replace("/games/competition/" + gameId);
 
-          }else{
-
-            alert(data['errors']);
-
-          } 
-          
-       });
+          }
+        })
+        .fail(function(data) {
+          alert( data.responseJSON.errors);
+        });
     }
 
     setInterval(function() { updateGraph(); },1000);
