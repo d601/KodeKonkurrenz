@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131210042701) do
+ActiveRecord::Schema.define(version: 20131210052645) do
 
   create_table "forem_categories", force: true do |t|
     t.string   "name",       null: false
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 20131210042701) do
     t.boolean  "isSubmitted"
     t.boolean  "isSubmitted2"
     t.boolean  "isPractice",                            default: false
+    t.datetime "started_at"
   end
 
   create_table "problems", force: true do |t|
