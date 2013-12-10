@@ -1,6 +1,5 @@
 <!-- implement staying on the page after creating a game and wait for the click action to send both players into the game-->
 <div class="liveGraph-div">
-
     <div class="container">
         <div class="row-fluid">
           <div class="span2">
@@ -138,7 +137,7 @@ $(function () {
         .done(function(data) {
           if(data['head'] == "ok"){
 
-          window.location.replace("/games/competition/" + gameId);
+            window.location.replace("/games/competition/" + gameId);
 
           }
         })
@@ -151,7 +150,21 @@ $(function () {
 
 });
 
- 
+<% if flash[:gameId] != nil%>
+function getGameStatus() {
+
+    $.get('/games/status/' + <%=flash[:gameId]%> )
+      .done(function(result) {
+        if (result.status == 'active') {
+          window.clearInterval(statusInterval);
+          window.location.replace("/games/competition/" + <%=flash[:gameId]%>);
+        }
+      });
+}
+
+window.statusInterval = window.setInterval(getGameStatus, 1000);
+<%end%>
+
 
 
 </script>

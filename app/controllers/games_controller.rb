@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute]
+  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute, :join, :create_game_practice]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
   require('open3')
 
@@ -81,9 +81,9 @@ class GamesController < ApplicationController
       render json: { errors: "Couldn't find game" }, status: 422
       return
     end
-    @game.player2_id = current_user.id
+    
 
-    if @game.player1_id == @game.player2_id
+    if @game.player1_id == current_user.id
       render json: { errors: "Can't join your own game" }, status: 422
       return
     end
@@ -91,6 +91,8 @@ class GamesController < ApplicationController
       render json: { errors: "Game is full" }, status: 422
       return
     end
+
+    @game.player2_id = current_user.id
 
     time = Time.now
     @game.joinTime = time.to_f
@@ -125,6 +127,7 @@ class GamesController < ApplicationController
     end
     #show newly created game in live graph. Eventually remove redirection here.
     flash[:success] = "Your game has been created!"
+    flash[:gameId] = @game.id
     redirect_to liveGraph_path
   end
 
