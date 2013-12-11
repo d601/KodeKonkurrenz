@@ -14,6 +14,8 @@
       <th>isPractice</th>
       <th>isSubmitted</th>
       <th>isSubmitted2</th>
+      <th>joinTime</th>
+      <th>started_at</th>
       <th></th>
       <th></th>
       <th></th>
@@ -31,8 +33,10 @@
         <td><%= game.problem_id %></td>
         <td><%= game.winner_id %></td>
         <td><%= game.isPractice %></td>
-        <td><%= game.isSubmitted %>
-        <td><%= game.isSubmitted2 %>
+        <td><%= game.isSubmitted %></td>
+        <td><%= game.isSubmitted2 %></td>
+        <td><%= game.joinTime %></td>
+        <td><%= game.started_at %></td>
         <td><%= link_to 'Show', game %></td>
         <td><%= link_to 'Edit', edit_game_path(game) %></td>
         <td><%= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' } %></td>

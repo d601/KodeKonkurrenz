@@ -190,10 +190,11 @@
 		}else{
 			consoleWriter(result.error,'red');
 		}
-		if(!isSubmission){
+		if(!isSubmission || true){
       enableButtons();
       return;
       }
+
     handleWinnerID(result.winner);
 	}
 

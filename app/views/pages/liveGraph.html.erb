@@ -32,6 +32,9 @@
 
 <script type="text/javascript">
 
+// Required to stop server from sending HTTP 304 upon subsequent AJAX requests
+$.ajaxSetup({ cache: false });
+
 var currentOpenGames = null; 
 
 

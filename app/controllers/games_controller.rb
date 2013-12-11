@@ -214,16 +214,11 @@ class GamesController < ApplicationController
         @game.isSubmitted2 = true
       end
     
-      p "******************* DEBUG ********************"
-      p results.inspect
       if @game.has_ended?
-        p "drawing game"
         draw_game
       elsif results[:exitCode] == 1
-        p "winning game"
         win_game
       else
-        p "losing game"
         lose_game
       end
     end
@@ -242,18 +237,25 @@ class GamesController < ApplicationController
   # The client will periodically poll the server to see if the other player has
   # won (or the timer is up).
   def status
+    begin
+      @game = Game.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      return render json: {status: 'invalid game id'}
+    end
+
     unless defined? @game.started_at
       return render json: {status: 'inactive'}
+    end
+
+    if @game.winner_id != -1
+      return render json: {status: 'finished', winner: @game.winner_id}
     end
 
     unless @game.has_ended?
       return render json: {status: 'active'}
     end
-
     # Do server-side draw calculations if the timer's up and there's no winner
     draw_game if @game.winner_id == -1
-
-    return render json: {status: 'finished', winner: @game.winner_id}
   end
 
   # There's probably a way to rewrite this so that win_game() is called with
