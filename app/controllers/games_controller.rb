@@ -1,7 +1,7 @@
 class GamesController < ApplicationController
   before_action :load_game, only: :create
   load_and_authorize_resource
-  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute, :join, :create_game_practice]
+  skip_load_and_authorize_resource only: [:competition, :create_game, :open_games, :compile, :execute, :join, :create_game_practice, :status]
   before_action :set_game, only: [:show, :edit, :update, :destroy]
   require('open3')
 
@@ -238,7 +238,7 @@ class GamesController < ApplicationController
   # The client will periodically poll the server to see if the other player has
   # won (or the timer is up).
   def status
-    unless @game.started_at
+    unless defined? @game.started_at
       return render json: {status: 'inactive'}
     end
 
