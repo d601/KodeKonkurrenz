@@ -26,8 +26,11 @@
     </div>
   </div>
 </div>
-<% flash.each do |key, value| %>
+
+<% # See https://github.com/d601/KodeKonkurrenz/issues/3
+flash_filtered = flash.to_hash.except(:gameId)
+flash_filtered.each do |key, value| %>
         <div class="<%= flash_class(key) %>">
-              <%= value %>
+              <%= key %> <%= value %>
         </div>
 <% end %>
