@@ -76,6 +76,10 @@ class GamesController < ApplicationController
   end
 
   def join
+    if current_user.nil?
+      return render json: { errors: "You must be logged in to join a game!" }, status: 422
+    end
+
     @game = Game.find(params[:id])
     unless @game
       render json: { errors: "Couldn't find game" }, status: 422
