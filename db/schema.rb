@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131124231903) do
+ActiveRecord::Schema.define(version: 20131210052645) do
 
   create_table "forem_categories", force: true do |t|
     t.string   "name",       null: false
@@ -109,21 +109,28 @@ ActiveRecord::Schema.define(version: 20131124231903) do
   add_index "forem_views", ["viewable_id"], name: "index_forem_views_on_viewable_id", using: :btree
 
   create_table "games", force: true do |t|
-    t.decimal  "time_limit", precision: 10, scale: 0
+    t.decimal  "time_limit",   precision: 10, scale: 0
     t.integer  "player1_id"
-    t.integer  "player2_id",                          default: -1
+    t.integer  "player2_id",                            default: -1
     t.integer  "problem_id"
-    t.integer  "winner_id",                           default: -1
+    t.integer  "winner_id",                             default: -1
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "started_at"
     t.boolean  "rated"
+    t.string   "joinTime"
+    t.boolean  "isSubmitted"
+    t.boolean  "isSubmitted2"
+    t.boolean  "isPractice",                            default: false
+    t.datetime "started_at"
   end
 
   create_table "problems", force: true do |t|
-    t.decimal  "time",       precision: 10, scale: 0
+    t.decimal  "time",          precision: 10, scale: 0
     t.integer  "difficulty"
     t.integer  "category"
+    t.text     "description"
+    t.text     "mainClass"
+    t.text     "templateClass"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -146,6 +153,10 @@ ActiveRecord::Schema.define(version: 20131124231903) do
     t.boolean  "forem_auto_subscribe",   default: false
     t.boolean  "admin",                  default: false
     t.integer  "rating",                 default: 1450
+    t.integer  "age",                    default: 0
+    t.string   "gender",                 default: "none"
+    t.string   "school",                 default: "none"
+    t.text     "about"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

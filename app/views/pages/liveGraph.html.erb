@@ -1,6 +1,5 @@
-
+<!-- implement staying on the page after creating a game and wait for the click action to send both players into the game-->
 <div class="liveGraph-div">
-
     <div class="container">
         <div class="row-fluid">
           <div class="span2">
@@ -32,6 +31,9 @@
 </div>
 
 <script type="text/javascript">
+
+// Required to stop server from sending HTTP 304 upon subsequent AJAX requests
+$.ajaxSetup({ cache: false });
 
 var currentOpenGames = null; 
 
@@ -81,11 +83,16 @@ $(function () {
                     }
                 }
         },
+        tooltip: {
+            formatter: function() {
+                 return "<strong>Time Limit:</strong>" + this.x + '<br/>' + "<strong>Player Rating:</strong>" +this.y ;
+            }
+        },
         series: [{
             id: '1',
             color: 'blue',
             showInLegend: false,
-            data: [[50, 2000], [50, 1000]]
+            data: []
         }],
         credits: {
             enabled: false
@@ -118,6 +125,7 @@ $(function () {
     function joinToGame(xAxis,yAxis) {
 
       var gameId = 0;
+      var problemId = 0;
 
       for (var i = 0; i < currentOpenGames.length; i++) {
           if(currentOpenGames[i][0] == xAxis && currentOpenGames[i][1] == yAxis){
@@ -127,26 +135,39 @@ $(function () {
           
       }
 
-      $.post( "games/join", { id: gameId }, function( data ) {
-          
+      $.post( "games/join", { id: gameId }, function( data ) {})
+
+        .done(function(data) {
           if(data['head'] == "ok"){
 
-          window.location.replace("/games/competition/" + gameId);
+            window.location.replace("/games/competition/" + gameId);
 
-          }else{
-
-            alert(data['errors']);
-
-          } 
-          
-       });
+          }
+        })
+        .fail(function(data) {
+          alert( data.responseJSON.errors);
+        });
     }
 
     setInterval(function() { updateGraph(); },1000);
 
 });
 
- 
+<% if flash[:gameId] != nil%>
+function getGameStatus() {
+
+    $.get('/games/status/' + <%=flash[:gameId]%> )
+      .done(function(result) {
+        if (result.status == 'active') {
+          window.clearInterval(statusInterval);
+          window.location.replace("/games/competition/" + <%=flash[:gameId]%>);
+        }
+      });
+}
+
+window.statusInterval = window.setInterval(getGameStatus, 1000);
+<%end%>
+
 
 
 </script>

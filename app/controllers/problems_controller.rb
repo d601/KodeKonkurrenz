@@ -1,12 +1,17 @@
 class ProblemsController < ApplicationController
   before_action :load_problem, only: :create
   load_and_authorize_resource
+  skip_load_and_authorize_resource only: [:practice]
   before_action :set_problem, only: [:show, :edit, :update, :destroy]
 
   # GET /problems
   # GET /problems.json
   def index
     @problems = Problem.all
+  end
+
+  def practice
+     @problems = Problem.all
   end
 
   # GET /problems/1
@@ -77,6 +82,6 @@ class ProblemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def problem_params
-      params.require(:problem).permit(:time, :difficulty, :category)
+      params.require(:problem).permit(:time, :difficulty, :category, :mainClass, :templateClass, :description)
     end
 end

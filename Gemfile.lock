@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 0c2ff236ff0137d4130d64863b22babc488add2c
+  revision: 23cbef2bbe71189e4a91f07b3479844f33c836fa
   specs:
-    friendly_id (5.0.1)
+    friendly_id (5.0.2)
       activerecord (~> 4.0.0)
 
 GIT
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 58c76fc2e903fef175be4d11b5d784b87e7d0d62
+  revision: ef6a4679928c38335265efd01e9b9120452c0060
   branch: rails4
   specs:
     forem (1.0.0.beta1)
@@ -25,6 +25,14 @@ GIT
       select2-rails (~> 3.4.3)
       simple_form (~> 3.0.0.rc)
       workflow (= 0.8.0)
+
+GIT
+  remote: https://github.com/aaronchi/best_in_place.git
+  revision: 1152e2256afd485e66602833fd99d09d60994841
+  specs:
+    best_in_place (2.1.0)
+      jquery-rails
+      rails (>= 3.1)
 
 GEM
   remote: https://rubygems.org/
@@ -83,11 +91,12 @@ GEM
     erubis (2.7.0)
     execjs (2.0.2)
     gemoji (1.1.2)
+    gravtastic (3.2.6)
     highcharts-rails (3.0.7)
       railties (>= 3.1)
     hike (1.2.3)
-    i18n (0.6.5)
-    jbuilder (1.5.2)
+    i18n (0.6.9)
+    jbuilder (1.5.3)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
     jquery-rails (3.0.4)
@@ -100,7 +109,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    mime-types (1.25)
+    mime-types (1.25.1)
     mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
@@ -144,7 +153,7 @@ GEM
     select2-rails (3.4.9)
       sass-rails
       thor (~> 0.14)
-    simple_form (3.0.0)
+    simple_form (3.0.1)
       actionpack (>= 4.0.0, < 4.1)
       activemodel (>= 4.0.0, < 4.1)
     sprockets (2.10.1)
@@ -170,10 +179,10 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbolinks (1.3.1)
+    turbolinks (2.0.0)
       coffee-rails
     tzinfo (0.3.38)
-    uglifier (2.3.1)
+    uglifier (2.3.2)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
     warden (1.2.3)
@@ -186,14 +195,16 @@ PLATFORMS
 
 DEPENDENCIES
   ace-rails-ap
+  best_in_place!
   bootstrap-sass (= 2.3.2.1)
   cancan (= 1.6.7)
   capistrano (~> 3.0.0)
   coffee-rails (~> 4.0.0)
-  devise
+  devise (= 3.2.1)
   forem!
   forem-bootstrap!
   friendly_id!
+  gravtastic
   highcharts-rails (~> 3.0.0)
   jbuilder (~> 1.2)
   jquery-rails

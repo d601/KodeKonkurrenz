@@ -6,4 +6,9 @@ class Game < ActiveRecord::Base
     return -1 unless player1
     player1.rating
   end
+  
+  def has_ended?
+    problem = Problem.find(problem_id)
+    return started_at.since(problem.time.minutes).past?
+  end
 end

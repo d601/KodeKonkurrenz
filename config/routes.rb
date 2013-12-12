@@ -1,4 +1,5 @@
 KodeKonkurrenz::Application.routes.draw do
+  # get "users/show"
   # This line mounts Forem's routes at /forums by default.
   # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
   # If you would like to change where this extension is mounted, simply change the :at option to something different.
@@ -26,18 +27,24 @@ KodeKonkurrenz::Application.routes.draw do
   match '/contactUs' , to: 'pages#contactUs', via: 'get'
   match '/privacy' , to: 'pages#privacy', via: 'get'
   match '/discuss' , to: 'pages#discuss', via: 'get'
-  match '/practice' , to: 'pages#practice', via: 'get'
+  match '/problems/practice' , to: 'problems#practice', via: 'get'
   match '/security' , to: 'pages#security', via: 'get'
   match '/termsOfService' , to: 'pages#termsOfService', via: 'get'
   match '/admin', to: 'pages#admin', via: 'get'
+  match '/users/:id' => 'users#show', via: 'get', as: :user
+  match '/users/edit/:id', to: 'users#edit', via: 'get', as: :edit_user
+  match '/users/:id', to: 'users#update', via: 'put' # put req'd for bip
+
 
   scope '/games' do
     match '/open', to: 'games#open_games', via: 'get'
     match '/join', to: 'games#join', via: 'post'
     match '/create', to: 'games#create_game', via: 'post'
+    match '/create/practice', to: 'games#create_game_practice', via: 'post'
     match '/competition/:id', to: 'games#competition', via: 'get', as: 'competition'
     match '/compile', to: 'games#compile', via: 'post'
     match '/execute', to: 'games#execute', via: 'post'
+    match '/status/:id', to: 'games#status', via: 'get'
   end
 
   scope '/admin' do

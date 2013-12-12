@@ -5,7 +5,7 @@
         <ul class="nav pull-left">
           <%= link_to "KodeKonkurrenz", main_app.root_path, :class => 'brand' %>
           <li><%= link_to "Play", main_app.liveGraph_path %></li>
-          <li><%= link_to "Practice", main_app.practice_path %></li>
+          <li><%= link_to "Practice", main_app.problems_practice_path %></li>
           <li><%= link_to "Discuss", main_app.discuss_path %></li>
           <% if user_signed_in? and current_user.admin? %>
             <li><%= link_to "Administrate", main_app.admin_path %></li>
@@ -14,6 +14,7 @@
         <div class="navbar-form pull-right">
           <div class="btn-group">
             <% if user_signed_in? %>
+              <%= link_to "Profile", main_app.user_path(current_user) , class: "btn btn-inverse" %>
               <%= link_to('Logout', main_app.destroy_user_session_path, :method => :delete, class: "btn btn-inverse") %>
             <% else %>
               <%= link_to('Login', main_app.new_user_session_path, class: "btn btn-inverse") %>
@@ -25,3 +26,11 @@
     </div>
   </div>
 </div>
+
+<% # See https://github.com/d601/KodeKonkurrenz/issues/3
+flash_filtered = flash.to_hash.except(:gameId)
+flash_filtered.each do |key, value| %>
+        <div class="<%= flash_class(key) %>">
+              <%= value %>
+        </div>
+<% end %>

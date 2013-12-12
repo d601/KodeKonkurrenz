@@ -1,0 +1,40 @@
+<div class="user-div">
+    <div class="container users">
+
+        <div class="row-fluid">
+            <div class="span4">
+                <div class='well'>
+                    <ul class="thumbnails">
+                    <li class="span12">
+                        <div id="image"></div>
+                  </li>
+
+              </ul></div>
+          </div>
+          <div class="span7">
+          <div class='well'>
+              <h4>Email: <%= @user.email %></h4>
+              <h4>Rating: <%= @user.rating %></h4>
+              <% can_edit = (@user.id == current_user.id) %>
+              <h4>Gender: <%= best_in_place_if can_edit, @user, :gender, type: :input %></h4>
+              <h4>School: <%= best_in_place_if can_edit, @user, :school, type: :input %></h4>
+              <h4>About: <%= best_in_place_if can_edit, @user, :about, type: :input %></h4>
+          </div>
+          </div>
+      </div>
+
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  var url = Gravtastic('<%= @user.email %>', {default: 'identicon', size: 200});
+  var img = new Image();
+  img.src = url;
+  document.getElementById("image").appendChild(img);
+
+  $(document).ready(function() {
+    /* Activating Best In Place */
+    jQuery(".best_in_place").best_in_place();
+  });
+</script>
