@@ -1,6 +1,14 @@
-<!-- need to add the ability to handle practice problems. after a game is done set isPractice to false again -->
-
+<%#need to add the ability to handle practice problems. after a game is done set isPractice to false again%>
+<div class="modal hide fade" id="gameOverModal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h3>Game Over</h3>
+	</div>
+	<div class="modal-body">
+	</div>
+</div>
 <% problem = Problem.find(@game.problem_id)%>
+
 <div class="competition-div" id="competition-div">
 	<div id="editor"></div>
 	<div class="well well-small" id="console">
@@ -56,25 +64,20 @@
 		$('#submitBtn').removeClass('disabled');	
 	}
 
-  function winGame() {
-    alert("You win!");
-  }
-
-  function loseGame() {
-    alert("The other player won!");
-  }
-
-  function drawGame() {
-    alert("It's a draw!");
-  }
+	function gameOver(winner){
+		$("#gameOverModal").modal('show');
+		$("#gameOverModal > .modal-body").append("<h4>"+winner+"</h4>");
+		clearInterval(timInt);
+		clearInterval(window.statusInterval);
+	}
 
   function handleWinnerID(ID) {
     if (ID == 0) {
-      drawGame();
+      gameOver("It's a draw");
     } else if (ID != <%= current_user.id %>) {
-      loseGame();
+      gameOver("You lose!");
     } else if (ID == <%= current_user.id %>) {
-      winGame();
+      gameOver("You win!");
     } else {
       // This code should never be reached (famous last words)!
       alert("Hey guys we got a big error here");
