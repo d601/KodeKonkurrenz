@@ -216,7 +216,7 @@ class GamesController < ApplicationController
     
       if @game.has_ended?
         draw_game
-      elsif results[:exitCode] == 1
+      elsif results[:exitCode] == 120
         win_game
       else
         lose_game
@@ -230,7 +230,9 @@ class GamesController < ApplicationController
       error: results[:error],
       deltaTime: results[:deltaTime],
       winnerExists: @game.winner_id == -1 ? false : true,
-      winner: @game.winner_id }
+      winner: @game.winner_id,
+      status:results[:exitCode]
+    }
   end
 
   # GET /games/status/:id

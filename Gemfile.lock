@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/FriendlyId/friendly_id.git
-  revision: 0732bdf36557945186c088656b160155858fa87f
+  revision: 23cbef2bbe71189e4a91f07b3479844f33c836fa
   specs:
-    friendly_id (5.0.1)
+    friendly_id (5.0.2)
       activerecord (~> 4.0.0)
 
 GIT
@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: git://github.com/radar/forem.git
-  revision: 19a0c50428bb2221a743067b5f2ed51a9ff17762
+  revision: ef6a4679928c38335265efd01e9b9120452c0060
   branch: rails4
   specs:
     forem (1.0.0.beta1)
