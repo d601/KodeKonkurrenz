@@ -1,10 +1,13 @@
 <%#need to add the ability to handle practice problems. after a game is done set isPractice to false again%>
 <div class="modal hide fade" id="gameOverModal">
-	<div class="modal-header">
+	<div class="modal-header text-center">
 		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		<h3>Game Over</h3>
 	</div>
-	<div class="modal-body">
+	<div class="modal-body text-center">
+	</div>
+	<div class="modal-footer">
+		<a href="/liveGraph" class="btn btn-primary pull-right">play another game</a>
 	</div>
 </div>
 <% problem = Problem.find(@game.problem_id)%>
@@ -66,7 +69,7 @@
 
 	function gameOver(winner){
 		$("#gameOverModal").modal('show');
-		$("#gameOverModal > .modal-body").append("<h4>"+winner+"</h4>");
+		$("#gameOverModal > .modal-body").html("<h4>"+winner+"</h4>");
 		clearInterval(timInt);
 		clearInterval(window.statusInterval);
 	}

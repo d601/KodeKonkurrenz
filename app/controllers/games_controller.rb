@@ -178,7 +178,9 @@ class GamesController < ApplicationController
 
   # POST /games/compile/
   def compile
+    @game = Game.find(params[:game])
     problem = Problem.find(params[:main])
+    submitting = params[:submitting]
     directory=params[:session]
     java=params[:code]
     dir = File.dirname("#{Rails.root}/tmp/java/#{directory}/ignored")
@@ -198,6 +200,18 @@ class GamesController < ApplicationController
     else
       success = false
     end
+    if submitting == "true" and @game.winner_id == -1
+      if @game.player1_id == current_user.id
+        @game.isSubmitted = true
+      elsif @game.player2_id == current_user.id
+        @game.isSubmitted2 = true
+      end
+      @game.save
+    
+      if success==false
+        lose_game
+      end
+    end
     return render json: {"success"=>success,"output"=>compile,"deltaTime"=>deltaTime}
   end
 
@@ -208,12 +222,6 @@ class GamesController < ApplicationController
     results = private_execution(params[:session])
 
     if submitting == "true" and @game.winner_id == -1
-      if @game.player1_id == current_user.id
-        @game.isSubmitted = true
-      elsif @game.player2_id == current_user.id
-        @game.isSubmitted2 = true
-      end
-    
       if @game.has_ended?
         draw_game
       elsif results[:exitCode] == 120
